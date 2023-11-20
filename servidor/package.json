@@ -2,8 +2,12 @@
   "name": "servidor",
   "version": "1.0.0",
   "description": "Ejemplos del curso",
+  "private": true,
   "main": "index.js",
   "scripts": {
+    "start": "node demo1.js",
+    "restart": "nodemon demo1.js",
+    "lint": "eslint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +27,7 @@
   "homepage": "https://github.com/jmagit/FS20231120#readme",
   "devDependencies": {
     "@types/node": "^20.9.2",
-    "eslint": "^8.54.0"
+    "eslint": "^8.54.0",
+    "eslint-plugin-node": "^11.1.0"
   }
 }
