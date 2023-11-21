@@ -1,7 +1,10 @@
+require('dotenv').config();
+if (process.env.NODE_ENV !== 'production')
+  require('dotenv').config({ path: './.env.dev', override: true, debug: true })
 const http = require('http');
 
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = process.env.NODE_PORT ?? 3000;
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
@@ -34,6 +37,7 @@ x = 0
 console.log(x && "Es verdadero")
 console.log(x || "El valor si es falso")
 console.log(x ?? "El valor si es nulo")
-if(x) {
-    
-}
+
+process.argv.slice(2).forEach((val, index) => {
+  console.log(`${index}: ${val.includes('=') ? `name: ${val.split('=')[0]} value: ${val.split('=')[1]}` : val}`);
+});
