@@ -1,0 +1,9 @@
+GET http://localhost:3000/saluda
+
+###
+
+GET http://localhost:3000/saluda/666
+
+###
+
+POST http://localhost:3000/saluda/666
