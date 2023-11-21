@@ -21,8 +21,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/saluda', require('./routes/saludos'));
 
-app.route('/saluda')
+/*
+app.route('/salu*')
   .get((req, res) => {
     res.end('GET: Hola mundo')
   })
@@ -42,7 +44,7 @@ app.route('/saluda/:id')
   .delete((req, res) => {
     res.end(`DELETE ${req.params.id}: Hola mundo`)
   })
-
+*/
 
 
 // catch 404 and forward to error handler
