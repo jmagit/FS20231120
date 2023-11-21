@@ -18,13 +18,13 @@ server.listen(port, hostname, () => {
 
 console.log('Aplicación arrancada ahora')
 
-let t = [ 10, 20, 30 ]
+let t = [10, 20, 30]
 //t = { x: 10, y: 20 }
-for(let i in t) {
-    console.log(`Valor ${i}`)
+for (let i in t) {
+  console.log(`Valor ${i}`)
 }
-for(let i of t) {
-    console.log(`Valor ${i}`)
+for (let i of t) {
+  console.log(`Valor ${i}`)
 }
 
 let x = 10, y = 20
@@ -41,3 +41,13 @@ console.log(x ?? "El valor si es nulo")
 process.argv.slice(2).forEach((val, index) => {
   console.log(`${index}: ${val.includes('=') ? `name: ${val.split('=')[0]} value: ${val.split('=')[1]}` : val}`);
 });
+
+// const readline = require('readline').createInterface({
+//   input: process.stdin, output: process.stdout,
+// });
+// readline.question(`Dame el puerto`, port => {
+//   readline.close();
+//   server.listen(port, hostname, () => {
+//     console.log(`Server running at http://${hostname}:${port}/`);
+//   });
+// });
