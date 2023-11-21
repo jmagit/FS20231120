@@ -1,6 +1,7 @@
-require('dotenv').config();
+const dotenv = require('dotenv')
+dotenv.config();
 if (process.env.NODE_ENV !== 'production')
-  require('dotenv').config({ path: './.env.dev', override: true, debug: true })
+  dotenv.config({ path: './.env.dev', override: true, debug: true })
 const http = require('http');
 
 const hostname = '127.0.0.1';
@@ -19,7 +20,14 @@ server.listen(port, hostname, () => {
 console.log('Aplicación arrancada ahora')
 
 let t = [10, 20, 30]
-//t = { x: 10, y: 20 }
+t[5]=22
+
+t = { x: 10, y: 20 }
+t['x']=20
+t.z = 44
+delete t.x
+t.metodo = () => 'algo'
+
 for (let i in t) {
   console.log(`Valor ${i}`)
 }
