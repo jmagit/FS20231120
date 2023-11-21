@@ -21,6 +21,27 @@
 - [OpenAPI (Swagger) Editor](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi)
 - [Node Essentials](https://marketplace.visualstudio.com/items?itemName=afractal.node-essentials)
 
+## Servidores en Docker
+
+### Bases de datos
+
+    docker run -d -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=P@$$w0rd" -p 1433:1433 -v %cd%\backup:/backup --name mssql2022 mcr.microsoft.com/mssql/server:2022-latest
+
+### Bases de datos de ejemplos
+
+- https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorksLT2022.bak
+- https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2022.bak
+- https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorksDW2022.bak
+
+### Instalación de bases de datos de ejemplos
+
+    /opt/mssql-tools/bin/sqlcmd \
+        -S localhost \
+        -U SA \
+        -P $MSSQL_SA_PASSWORD \
+        -Q "RESTORE DATABASE [AdventureWorksLT2022] FROM  DISK = N'/backup/AdventureWorksLT2022.bak' WITH  FILE = 1,  MOVE N'AdventureWorksLT2022_Data' TO N'/var/opt/mssql/data/AdventureWorksLT2022.mdf',  MOVE N'AdventureWorksLT2022_Log' TO N'/var/opt/mssql/data/AdventureWorksLT2022_log.ldf',  NOUNLOAD,  STATS = 5"
+
+
 ## Angular Command Line Interface
 
     npm install -g nodemon express-generator @nestjs/cli @angular/cli
