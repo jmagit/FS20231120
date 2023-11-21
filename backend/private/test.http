@@ -1,4 +1,10 @@
-GET http://localhost:3000/saluda
+GET http://localhost:3000/saluda?Nombre=worl
+
+###
+GET http://localhost:3000/saluda/user
+
+###
+GET http://localhost:3000/saludar
 
 ###
 
@@ -6,4 +12,8 @@ GET http://localhost:3000/saluda/666
 
 ###
 
-POST http://localhost:3000/saluda/666
+GET http://localhost:3000/saluda/666/despide
+
+###
+
+PUT http://localhost:3000/saluda/666
