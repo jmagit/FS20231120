@@ -12,6 +12,15 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\bin\\www"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Otro",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\bin\\www"
         }
     ]
 }
