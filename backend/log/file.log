@@ -8,3 +8,7 @@
 ::1 - - [22/Nov/2023:11:00:43 +0000] "POST /fileupload HTTP/1.1" 200 - "http://localhost:3000/fileupload" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 ::1 - - [22/Nov/2023:11:00:53 +0000] "GET /files/user-not-found-female.png HTTP/1.1" 200 3651 "http://localhost:3000/fileupload" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 ::1 - - [22/Nov/2023:11:01:20 +0000] "GET /files/ HTTP/1.1" 404 23 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+::1 - - [22/Nov/2023:11:02:29 +0000] "GET /fileupload HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+::1 - - [22/Nov/2023:11:02:53 +0000] "POST /fileupload HTTP/1.1" 200 - "http://localhost:3000/fileupload" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+::1 - - [22/Nov/2023:11:03:04 +0000] "GET /files/loading.gif HTTP/1.1" 200 10284 "http://localhost:3000/fileupload" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+::1 - - [22/Nov/2023:11:03:09 +0000] "GET /files/user-not-found-male.png HTTP/1.1" 200 3691 "http://localhost:3000/fileupload" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
