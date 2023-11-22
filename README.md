@@ -26,6 +26,8 @@
 ### Bases de datos
 
     docker run -d -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=P@$$w0rd" -p 1433:1433 -v %cd%\backup:/backup --name mssql2022 mcr.microsoft.com/mssql/server:2022-latest
+    docker run -d --name mysql-sakila -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 jamarton/mysql-sakila
+    docker run -d --name mongodb -p 27017:27017 mongo
 
 ### Bases de datos de ejemplos
 
@@ -35,12 +37,23 @@
 
 ### Instalación de bases de datos de ejemplos
 
+Con backup:
+
     /opt/mssql-tools/bin/sqlcmd \
         -S localhost \
         -U SA \
         -P $MSSQL_SA_PASSWORD \
         -Q "RESTORE DATABASE [AdventureWorksLT2022] FROM  DISK = N'/backup/AdventureWorksLT2022.bak' WITH  FILE = 1,  MOVE N'AdventureWorksLT2022_Data' TO N'/var/opt/mssql/data/AdventureWorksLT2022.mdf',  MOVE N'AdventureWorksLT2022_Log' TO N'/var/opt/mssql/data/AdventureWorksLT2022_log.ldf',  NOUNLOAD,  STATS = 5"
 
+Con scripts:
+
+    /opt/mssql-tools/bin/sqlcmd \
+        -S localhost \
+        -U SA \
+        -P $MSSQL_SA_PASSWORD \
+        -i /backup/cursos-mssql.sql \
+        -i /backup/sql-server-sakila-schema.sql \
+        -i /backup/sql-server-sakila-insert-data.sql
 
 ## Angular Command Line Interface
 
