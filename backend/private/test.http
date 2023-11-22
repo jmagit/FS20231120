@@ -47,4 +47,3 @@ Accept: application/json
     <password>P@$$w0rd</password>
 </User>
 
-npx sequelize-auto -o "./models" --cm p --cp c --cf k -e mssql -h localhost -p 1433 -d sakila -u sa -x P@$$w0rd
