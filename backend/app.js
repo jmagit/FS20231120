@@ -35,6 +35,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/saluda', require('./routes/saludos'));
 app.use('/', require('./routes/seguridad'));
+app.use('/', require('./routes/upload'));
 
 /*
 app.route('/salu*')
@@ -68,7 +69,7 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  if (req.accept('application/json')) {
+  if (req.accepts('application/json')) {
     res.status(err.status || 500).json(err)
     return
   }
