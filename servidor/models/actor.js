@@ -11,12 +11,18 @@ module.exports = function(sequelize, DataTypes) {
     firstName: {
       type: DataTypes.STRING(45),
       allowNull: false,
-      field: 'first_name'
+      field: 'first_name',
+      validate: {
+        isUppercase: true,
+      }
     },
     lastName: {
       type: DataTypes.STRING(45),
       allowNull: false,
-      field: 'last_name'
+      field: 'last_name',
+      // validate: {
+      //   isUppercase: true,
+      // }
     },
     lastUpdate: {
       type: DataTypes.DATE,
