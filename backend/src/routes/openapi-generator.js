@@ -30,10 +30,10 @@ const swaggerDefinition = {
                 },
                 "port": {
                     "enum": [
-                        "4321",
+                        "3000",
                         "8181"
                     ],
-                    "default": "4321"
+                    "default": "3000"
                 },
             }
         }

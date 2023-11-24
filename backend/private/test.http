@@ -55,7 +55,11 @@ get {{hostname}}/stylesheets/style.css
 
 ###
 
-get {{hostname}}/api/actores
+get {{hostname}}/api/actores/v1?page=1&rows=10
+
+###
+
+get {{hostname}}/api/actores/v11/1/peliculas
 
 ###
 # @name newActor
@@ -64,7 +68,7 @@ Content-Type: application/json
 
 {
     "actorId": 222,
-    "firstName": "pp",
+    "firstName": "PP",
     "lastName": "GRILLO"
 }
 

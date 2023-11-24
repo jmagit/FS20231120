@@ -29,8 +29,8 @@ const schema = {
     ]
 }
 
+const validate = ajv.compile(schema)
 function throwsErrorIfInvalid(data) {
-    const validate = ajv.compile(schema)
     if (!validate(data))
         throw new ApiError('Invalid format', validate.errors)
 }
@@ -68,35 +68,48 @@ const router = express.Router();
  *       "200":
  *         description: "OK"
  */
-router.route('/')
-    .get(async function (req, res) { // get all
-        const page = +req.query.page || 0;
-        const limit = +req.query.rows || 10;
-        let options = { offsset: page * limit, limit }
-        if (req.query.page === 'all') {
-            options = {}
-        }
-        if (req.query.proyection) {
-            options.attributes = req.query.proyection.split(',')
-        } else {
-            options.attributes = ["actorId", "firstName", "lastName"]
-        }
-        if (req.query.order) {
-            options.order = req.query.order.split(',')
-        }
-        if (req.query.find) {
-            options.where = { firstName: { [Op.startsWith]: req.query.find } }
-        }
-        try {
-            let resultado = await dbContext.Actor.findAll(options)
-            let totalRows = await dbContext.Actor.count()
-            // res.json(resultado)
-            res.json({ totalRows, page, totalPages: Math.ceil(totalRows / limit), listado: resultado })
-        } catch (error) {
-            res.status(400).json(formatError(req, error))
-        }
+const getComun = async (req, res) => { // get all
+    const page = +req.query.page || 0;
+    const limit = +req.query.rows || 10;
+    let options = { offsset: page * limit, limit }
+    if (req.query.page === 'all') {
+        options = {}
+    }
+    if (req.query.proyection) {
+        options.attributes = req.query.proyection.split(',')
+    } else {
+        options.attributes = ["actorId", "firstName", "lastName"]
+    }
+    if (req.query.order) {
+        options.order = req.query.order.split(',')
+    }
+    if (req.query.find) {
+        options.where = { firstName: { [Op.startsWith]: req.query.find } }
+    }
+    try {
+        let resultado = await dbContext.Actor.findAll(options)
+        let totalRows = await dbContext.Actor.count()
+        // res.json(resultado)
+        res.json({ totalRows, page, totalPages: Math.ceil(totalRows / limit), listado: resultado })
+    } catch (error) {
+        res.status(400).json(formatError(req, error))
+    }
 
+}
+router.route('/v1')
+    .get(getComun)
+    .post(async function (req, res) { // add
+        try {
+            throwsErrorIfInvalid(req.body)
+            let row = await dbContext.Actor.create({ firstName: req.body.firstName, lastName: req.body.lastName })
+            res.append('location', formatLocation(req, row.actorId))
+            res.sendStatus(201)
+        } catch (error) {
+            res.status(400).send(formatError(req, error))
+        }
     })
+router.route('/v2')
+    .get(getComun)
     .post(async function (req, res) { // add
         try {
             throwsErrorIfInvalid(req.body)
@@ -108,7 +121,7 @@ router.route('/')
         }
     })
 
-router.route('/:id')
+router.route('/v1/:id')
     .get(async function (req, res) { // get one
         try {
             let row = await dbContext.Actor.findByPk(req.params.id)
@@ -116,8 +129,8 @@ router.route('/:id')
                 res.json(row)
             else
                 res.sendStatus(404)
-        } catch {
-            res.sendStatus(404)
+        } catch (error) {
+            res.status(400).send(formatError(req, error))
         }
     })
     .put(async function (req, res) { // update
@@ -127,10 +140,10 @@ router.route('/:id')
         } catch (error) {
             return res.status(400).send(formatError(req, error))
         }
-        let row = await dbContext.Actor.findByPk(req.params.id)
-        if (!row) return res.sendStatus(404)
-        row.set({ firstName: req.body.firstName, lastName: req.body.lastName })
         try {
+            let row = await dbContext.Actor.findByPk(req.params.id)
+            if (!row) return res.sendStatus(404)
+            row.set({ firstName: req.body.firstName, lastName: req.body.lastName })
             await row.save()
             res.sendStatus(204)
         } catch (error) {
@@ -140,8 +153,7 @@ router.route('/:id')
     .delete(async function (req, res) { // remove
         let row = await dbContext.Actor.findByPk(req.params.id)
         if (!row) {
-            res.sendStatus(404)
-            return
+            return res.sendStatus(404)
         }
         try {
             await row.destroy()
@@ -151,11 +163,11 @@ router.route('/:id')
         }
     })
 
-router.get('/:id/peliculas', async function (req, res) { // get one
+router.get('/v*/:id/peliculas', async function (req, res) { // get one
     try {
-        let row = await dbContext.Actor.findByPk(req.params.id, { include: 'peliculas' })
+        let row = await dbContext.Actor.findByPk(req.params.id, { include: 'filmIdFilms' })
         if (row)
-            res.json(row.peliculas.map(item => ({ id: item.film_id, name: item.title })))
+            res.json(row.filmIdFilms.map(item => ({ id: item.filmId, name: item.title })))
         else
             res.sendStatus(404)
     } catch {

@@ -58,24 +58,6 @@ function throwsErrorIfInvalid(data) {
  *     description: Mantenimiento de contactos
  * components:
  *   schemas:
- *     ErrorMessage:
- *       type: object
- *       title: Error message
- *       required:
- *         - type
- *         - status
- *         - title
- *       properties:
- *         type:
- *           type: string
- *         status:
- *           type: integer
- *         title:
- *           type: string
- *         detail:
- *           type: string
- *         source:
- *           type: string
  *     ContactoModel:
  *       title: Contacto (Modelo)
  *       allOf:
@@ -399,7 +381,9 @@ router.route('/')
     .post(async function (req, res) { // add
         try {
             throwsErrorIfInvalid(req.body)
-            let row = await dao.create({ ...req.body })
+            let reg = { ...req.body }
+            delete reg.id
+            let row = await dao.create(req)
             res.append('location', formatLocation(req, row.id))
             res.sendStatus(201)
         } catch (error) {

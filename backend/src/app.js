@@ -42,6 +42,19 @@ app.use('/api/contactos', require('./routes/contactos.api'));
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./routes/openapi-generator').openapiSpecification;
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const OpenApiValidator = require('express-openapi-validator');
+const validator = require('validator')
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: swaggerDocument,
+    validateRequests: true, // (default)
+    // validateResponses: true, // false by default
+    ignoreUndocumented: true,
+    formats: [
+      { name: 'nif', type: 'string', validate: (v) => validator.isIdentityCard(v, 'ES') },
+    ]
+  })
+)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
