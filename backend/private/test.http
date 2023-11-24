@@ -55,7 +55,7 @@ get {{hostname}}/stylesheets/style.css
 
 ###
 
-get {{hostname}}/api/actores/v1?page=1&rows=10
+get {{hostname}}/api/actores/v1?page=5&rows=10
 
 ###
 

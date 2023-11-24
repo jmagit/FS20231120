@@ -16,6 +16,9 @@ const app = express();
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 
+const helmet = require('helmet')
+app.use(helmet())
+
 //app.use(logger('dev'));
 app.use(logger('combined', {
   stream: rfs.createStream("file.log", {

@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const { formatError, formatLocation, ApiError } = require('../lib/utils')
 const { dbContext } = require('../models/sakila/db-context')
-// const security = require("../lib/security");
+const { useAuthentication, readOnly, onlyInRole } = require('../lib/security');
 const Ajv = require("ajv")
 const addFormats = require("ajv-formats")
 
@@ -37,8 +37,9 @@ function throwsErrorIfInvalid(data) {
 
 const router = express.Router();
 
-// router.use(security.onlyAuthenticated)
-// router.use(security.onlyInRole('Empleados,Administradores'))
+// router.use(useAuthentication)
+// // router.use(readOnly)
+// router.use(onlyInRole('Empleados,Administradores'))
 
 // router.use(function (req, res, next) {
 //     if (!res.locals.isAuthenticated) {
@@ -71,7 +72,7 @@ const router = express.Router();
 const getComun = async (req, res) => { // get all
     const page = +req.query.page || 0;
     const limit = +req.query.rows || 10;
-    let options = { offsset: page * limit, limit }
+    let options = { offset: page * limit, limit }
     if (req.query.page === 'all') {
         options = {}
     }

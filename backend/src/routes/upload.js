@@ -12,8 +12,7 @@ const upload = multer({
 const router = express.Router();
 router.use('/files', express.static('uploads'))
 router.get('/fileupload', function (req, res) {
-  res.status(200).end(`
-    <html><body><h1>Multiple file uploads</h1>
+  res.contentType('text/html').status(200).end(`<html><body><h1>Multiple file uploads</h1>
     <form action="fileupload" method="post" enctype="multipart/form-data">
         <input type="file" name="filestoupload" multiple="multiple" required><input type="submit">
     </form>
