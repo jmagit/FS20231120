@@ -2,9 +2,10 @@ const http = require('http');
 const production = process.env.NODE_ENV === 'production';
 
 class ApiError extends Error {
-    constructor(message) {
+    constructor(message, errors) {
         super(message);
-        this.name = "ApiError";
+        this.name = 'ApiError';
+        this.errors = errors;
     }
 }
 module.exports.ApiError = ApiError
@@ -12,15 +13,27 @@ module.exports.ApiError = ApiError
 exports.extractURL = (req) => `${req.protocol}://${req.hostname}:${req.connection.localPort}${req.originalUrl}`
 exports.formatLocation = (req, id) => `${req.protocol}://${req.hostname}:${req.connection.localPort}${req.originalUrl}/${id}`
 exports.formatError = (req, error, status = 400) => {
-    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError')
-        return {
-            type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
-            status: 400,
-            title: 'One or more validation errors occurred.',
-            instance: req.originalUrl,
-            errors: Object.assign({}, ...error.errors.map(item => ({ [item.path]: item.message })))
-        }
-    return { type: 'about:blank', status, title: error.message, instance: req.originalUrl }
+    switch (error.name) {
+        case 'SequelizeValidationError':
+        case 'SequelizeUniqueConstraintError':
+            return {
+                type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
+                status: 400,
+                title: 'One or more validation errors occurred.',
+                instance: req.originalUrl,
+                errors: Object.assign({}, ...error.errors.map(item => ({ [item.path]: item.message })))
+            }
+        case 'ApiError':
+            return {
+                type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
+                status: 400,
+                title: 'One or more validation errors occurred.',
+                instance: req.originalUrl,
+                errors: error.errors
+            }
+        default:
+            return { type: 'about:blank', status, title: error.message, instance: req.originalUrl }
+    }
 }
 const details = {
     400: { type: 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1', title: 'Bad Request' },

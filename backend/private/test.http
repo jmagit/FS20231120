@@ -1,26 +1,28 @@
-GET http://localhost:3000/saluda?Nombre=worl
+@hostname = http://localhost:3000
+
+GET {{hostname}}/saluda?Nombre=worl
 
 ###
-GET http://localhost:3000/saluda/user
+GET {{hostname}}/saluda/user
 
 ###
-GET http://localhost:3000/saludar
-
-###
-
-GET http://localhost:3000/saluda/666
+GET {{hostname}}/saludar
 
 ###
 
-GET http://localhost:3000/saluda/666/despide
+GET {{hostname}}/saluda/666
 
 ###
 
-PUT http://localhost:3000/saluda/666
+GET {{hostname}}/saluda/666/despide
 
 ###
 
-post http://localhost:3000/login
+PUT {{hostname}}/saluda/666
+
+###
+
+post {{hostname}}/login
 Content-Type: application/json
 Accept: application/json
 
@@ -31,14 +33,14 @@ Accept: application/json
 
 ###
 
-post http://localhost:3000/login
+post {{hostname}}/login
 Content-Type: application/x-www-form-urlencoded
 
 username=form@example.com&password=P@$$w0rd
 
 ###
 
-post http://localhost:3000/login
+post {{hostname}}/login
 Content-Type: application/xml
 Accept: application/json
 
@@ -46,4 +48,82 @@ Accept: application/json
     <username>json@example.com</username>
     <password>P@$$w0rd</password>
 </User>
+###
 
+get {{hostname}}/stylesheets/style.css
+
+
+###
+
+get {{hostname}}/api/actores
+
+###
+# @name newActor
+post {{hostname}}/api/actores
+Content-Type: application/json
+
+{
+    "actorId": 222,
+    "firstName": "pp",
+    "lastName": "GRILLO"
+}
+
+###
+# @name loadActor
+
+get {{newActor.response.headers.location}}
+
+###
+put {{newActor.response.headers.location}}
+Content-Type: application/json
+
+{
+    "actorId": {{loadActor.response.body.$.actorId}},
+    "firstName": "PEPITO",
+    "lastName": "GRILLO",
+     "lastUpdate": "2023-11-23T00:00:00"
+}
+
+###
+
+delete {{newActor.response.headers.location}}
+
+###
+post {{hostname}}/api/actores
+Content-Type: application/json
+
+{
+    "actorId": 222,
+    "firstName": 2,
+    "lastName": 2
+}
+
+###
+put {{hostname}}/api/actores/202
+Content-Type: application/json
+
+{
+    "actorId": 202,
+    "firstName": "1234567890123456789012345678901234567890a",
+    "lastName": "2"
+}
+
+###
+put {{hostname}}/api/actores/1
+Content-Type: application/json
+
+{
+    "actorId": 222,
+    "firstName": 2,
+    "lastName": 2
+}
+
+###
+get {{hostname}}/api/contactos
+Content-Type: application/json
+
+{
+    "actorId": 222,
+    "firstName": 2,
+    "lastName": 2
+}
