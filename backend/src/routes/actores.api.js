@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const { formatError, formatLocation, ApiError } = require('../lib/utils')
 const { dbContext } = require('../models/sakila/db-context')
-const { useAuthentication, readOnly, onlyInRole } = require('../lib/security');
+// const { useAuthentication, readOnly, onlyInRole } = require('../lib/security');
 const Ajv = require("ajv")
 const addFormats = require("ajv-formats")
 
@@ -32,7 +32,7 @@ const schema = {
 const validate = ajv.compile(schema)
 function throwsErrorIfInvalid(data) {
     if (!validate(data))
-        throw new ApiError('Invalid format', validate.errors)
+        throw new ApiError(400, 'Invalid format', validate.errors)
 }
 
 const router = express.Router();
@@ -41,17 +41,6 @@ const router = express.Router();
 // // router.use(readOnly)
 // router.use(onlyInRole('Empleados,Administradores'))
 
-// router.use(function (req, res, next) {
-//     if (!res.locals.isAuthenticated) {
-//         res.status(401).end()
-//         return
-//     }
-//     if (!res.locals.isInRole('Administradores')) {
-//         res.status(403).end()
-//         return
-//     }
-//     next()
-// })
 /**
 * @swagger
 * tags:
@@ -102,9 +91,11 @@ router.route('/v1')
     .post(async function (req, res) { // add
         try {
             throwsErrorIfInvalid(req.body)
-            let row = await dbContext.Actor.create({ firstName: req.body.firstName, lastName: req.body.lastName })
+            const reg = { firstName: req.body.firstName, lastName: req.body.lastName }
+            let row = await dbContext.Actor.create(reg)
+            // let row = await dbContext.Actor.create({ firstName: req.body.firstName, lastName: req.body.lastName })
             res.append('location', formatLocation(req, row.actorId))
-            res.sendStatus(201)
+            res.status(201).end('')
         } catch (error) {
             res.status(400).send(formatError(req, error))
         }
@@ -116,7 +107,7 @@ router.route('/v2')
             throwsErrorIfInvalid(req.body)
             let row = await dbContext.Actor.create({ firstName: req.body.firstName, lastName: req.body.lastName })
             res.append('location', formatLocation(req, row.actorId))
-            res.sendStatus(201)
+            res.status(201).end('')
         } catch (error) {
             res.status(400).send(formatError(req, error))
         }
@@ -137,7 +128,7 @@ router.route('/v1/:id')
     .put(async function (req, res) { // update
         try {
             throwsErrorIfInvalid(req.body)
-            if (req.body.actorId != req.params.id) throw new Error('Invalid identifier')
+            if (req.body.actorId != req.params.id) throw new ApiError(400, 'No coinciden los identificadores')
         } catch (error) {
             return res.status(400).send(formatError(req, error))
         }

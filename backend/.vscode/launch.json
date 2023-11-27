@@ -12,6 +12,19 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\bin\\www"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Web Server 4321",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "env": {
+                "PORT": "4321"
+            },
+            "program": "${workspaceFolder}\\bin\\www"
         }
+
     ]
 }

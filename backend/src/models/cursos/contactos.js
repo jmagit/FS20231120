@@ -9,36 +9,62 @@ module.exports = function(sequelize, DataTypes) {
     },
     tratamiento: {
       type: DataTypes.STRING(10),
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isIn: [['Sr.', 'Sra.', 'Srta.', 'Dr.', 'Dra.', 'Ilmo.', 'Ilma.', 'Excmo.', 'Excma.']],
+      }
     },
     nombre: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [1,100],
+      }
     },
     apellidos: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [1,100],
+      }
     },
     telefono: {
       type: DataTypes.STRING(11),
-      allowNull: true
+      allowNull: true,
+      validate: {
+        is: /^(\d{3}\s){2}\d{3}$/,
+      }
     },
     email: {
       type: DataTypes.STRING(100),
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isEmail: true, 
+      }
     },
     sexo: {
       type: DataTypes.CHAR(1),
       allowNull: false,
-      defaultValue: "H"
+      defaultValue: "H",
+      validate: {
+        isIn: [['H', 'M']],
+      }
     },
     nacimiento: {
       type: DataTypes.DATEONLY,
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isBefore: (new Date()).toDateString(), 
+      }
     },
     avatar: {
       type: DataTypes.STRING(200),
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isUrl: true, 
+      }
     },
     conflictivo: {
       type: DataTypes.BOOLEAN,

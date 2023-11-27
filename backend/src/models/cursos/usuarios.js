@@ -4,7 +4,10 @@ module.exports = function(sequelize, DataTypes) {
     idUsuario: {
       type: DataTypes.STRING(200),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      validate: {
+        isEmail: true, 
+      }
     },
     password: {
       type: DataTypes.STRING(100),
@@ -12,12 +15,21 @@ module.exports = function(sequelize, DataTypes) {
     },
     nombre: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [1,100],
+      }
     },
     roles: {
       type: DataTypes.STRING(500),
       allowNull: true,
       defaultValue: ""
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: true
     }
   }, {
     sequelize,

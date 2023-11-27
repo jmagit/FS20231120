@@ -1,7 +1,7 @@
 const swaggerJsdoc = require('swagger-jsdoc')
 
 const swaggerDefinition = {
-    "openapi": "3.0.0",
+    "openapi": "3.0.1",
     "info": {
         "title": "Demos Curso",
         "version": "2.0.0",
@@ -29,9 +29,7 @@ const swaggerDefinition = {
                     "default": "http"
                 },
                 "port": {
-                    "enum": [
-                        "3000",
-                        "8181"
+                    "enum": [ "3000", "4321", "8181"
                     ],
                     "default": "3000"
                 },

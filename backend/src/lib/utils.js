@@ -2,8 +2,9 @@ const http = require('http');
 const production = process.env.NODE_ENV === 'production';
 
 class ApiError extends Error {
-    constructor(message, errors) {
+    constructor(status, message, errors) {
         super(message);
+        this.status = status;
         this.name = 'ApiError';
         this.errors = errors;
     }
@@ -12,6 +13,22 @@ module.exports.ApiError = ApiError
 
 exports.extractURL = (req) => `${req.protocol}://${req.hostname}:${req.connection.localPort}${req.originalUrl}`
 exports.formatLocation = (req, id) => `${req.protocol}://${req.hostname}:${req.connection.localPort}${req.originalUrl}/${id}`
+exports.generateProjection = (source, projection) => {
+    const propiedades = projection.replace(/\s/g, '').split(',');
+        let target = {};
+        propiedades.forEach(item => {
+            if (source[item] != undefined) target[item] = source[item]
+        });
+        return Object.keys(target).length > 0 ? target : source;
+}
+exports.emptyPropertiesToNull = source => {
+    const target = { ...source }
+    Object.keys(target).forEach(prop => {
+        if(target[prop] === "") target[prop] = null 
+    })
+    return target
+}
+
 exports.formatError = (req, error, status = 400) => {
     switch (error.name) {
         case 'SequelizeValidationError':
@@ -24,7 +41,7 @@ exports.formatError = (req, error, status = 400) => {
                 errors: Object.assign({}, ...error.errors.map(item => ({ [item.path]: item.message })))
             }
         case 'ApiError':
-            return {
+            return error.payload ?? {
                 type: 'https://tools.ietf.org/html/rfc7231#section-6.5.1',
                 status: 400,
                 title: 'One or more validation errors occurred.',
@@ -60,28 +77,27 @@ const details = {
 exports.problemDetails = (req, status = 400) => {
     return Object.assign({}, details[status], { status, instance: req.originalUrl })
 }
-const generateError = (detail, status = 500, errors = undefined, source = undefined) => {
+const generateError = (req, detail, status = 500, errors = undefined, source = undefined) => {
     const title = http.STATUS_CODES[status] || '(desconocido)'
-    let error = new ApiError(title)
-    error.payload = { type: details[status].type || 'about:blank', title, status, detail }
+    let error = new ApiError(status, title)
+    error.payload = { type: details[status].type || 'about:blank', title, status, instance: req.originalUrl, detail }
     if (errors) error.payload.errors = errors
     if (source) error.payload.source = source
     return error
 }
-
 module.exports.generateError = generateError
-module.exports.generateErrorByStatus = (status = 500) => {
-    return generateError(http.STATUS_CODES[status] || '(desconocido)', status)
+module.exports.generateErrorByStatus = (req, status = 500) => {
+    return generateError(req, http.STATUS_CODES[status] || '(desconocido)', status)
 }
-module.exports.generateErrorByError = (error, status = 500) => {
+module.exports.generateErrorByError = (req, error, status = 500) => {
     switch (error.name) {
         case 'dbJSONError':
-            return generateError(error.message, error.code)
+            return generateError(req, error.message, error.code)
         case 'SequelizeValidationError':
         case 'SequelizeUniqueConstraintError':
-            return generateError('One or more validation errors occurred.', 400,
+            return generateError(req, 'One or more validation errors occurred.', 400,
                 Object.assign({}, ...error.errors.map(item => ({ [item.path]: item.message }))))
         default:
-            return generateError(error.message, error.statusCode || error.status || status, error.errors, production ? null : (error.trace || error.stack), error.name)
+            return generateError(req, error.message, error.statusCode || error.status || status, error.errors, production ? null : (error.trace || error.stack), error.name)
     }
 }

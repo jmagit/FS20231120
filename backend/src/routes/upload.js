@@ -23,8 +23,7 @@ router.post('/fileupload', upload.array('filestoupload'), async (req, res, _next
   if (req.headers?.accept?.includes('application/json'))
     res.status(200).json(rutas).end();
   else {
-    res.status(200).end(`
-    <html><body><h1>Uploads</h1>
+    res.contentType('text/html').status(200).end(`<html><body><h1>Uploads</h1>
     <ul>${rutas.map(r => `<li><a href="${r.url}">${r.url}</a></li>`).join('')}</ul>
     </body></html>`);
   }

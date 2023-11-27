@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const xmlParser = require('express-xml-bodyparser');
 const logger = require('morgan');
 const rfs = require('rotating-file-stream')
+const { formatError, emptyPropertiesToNull } = require('./lib/utils');
 
 
 const indexRouter = require('./routes/index');
@@ -16,8 +17,8 @@ const app = express();
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 
-const helmet = require('helmet')
-app.use(helmet())
+// const helmet = require('helmet')
+// app.use(helmet())
 
 //app.use(logger('dev'));
 app.use(logger('combined', {
@@ -28,17 +29,23 @@ app.use(logger('combined', {
     compress: "gzip" // compress rotated files
   })
 }))
+
+// Body parse
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(xmlParser());
 app.use(cookieParser());
+app.use((req, res, next) => {
+  req.body = emptyPropertiesToNull(req.body)
+  next()
+})
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/saluda', require('./routes/saludos'));
-app.use('/', require('./routes/seguridad'));
 app.use('/', require('./routes/upload'));
+app.use('/', require('./routes/seguridad.api'));
 app.use('/api/actores', require('./routes/actores.api'));
 app.use('/api/contactos', require('./routes/contactos.api'));
 
@@ -50,7 +57,7 @@ const validator = require('validator')
 app.use(
   OpenApiValidator.middleware({
     apiSpec: swaggerDocument,
-    validateRequests: true, // (default)
+    validateRequests: true, // true by default
     // validateResponses: true, // false by default
     ignoreUndocumented: true,
     formats: [
@@ -68,7 +75,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, _next) {
   // set locals, only providing error in development
   if (req.accepts('application/json')) {
-    res.status(err.status || 500).json(err)
+    res.status(err.status || 500).json(formatError(req, err, err.status || 500))
     return
   }
   res.locals.message = err.message;

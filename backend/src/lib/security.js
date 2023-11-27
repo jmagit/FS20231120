@@ -2,9 +2,6 @@ const { createPrivateKey, createPublicKey } = require('crypto')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { generateErrorByStatus, generateError } = require('./utils')
-const express = require('express');
-const xml2js = require('xml2js');
-const builder = new xml2js.Builder();
 
 const security = {
     APP_SECRET: 'Es segura al 99%',
@@ -15,16 +12,20 @@ const security = {
     PROP_PASSWORD: 'password',
     PROP_NAME: 'idUsuario',
     PASSWORD_PATTERN: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/,
-    USR_FILENAME: './data/usuarios.json',
     EXPIRACION_MIN: 5,
     REFRESH_FACTOR: 4,
     USERNAME: 'adm@example.com',
     PASSWORD: 'P@$$w0rd',
 }
+module.exports.config = security
 
+// Criptografía
 module.exports.encriptaPassword = async (password) => {
     const salt = await bcrypt.genSalt(10)
     return bcrypt.hash(password, salt)
+}
+module.exports.verificaPassword = async (texto, hash) => {
+    return bcrypt.compare(texto, hash)
 }
 
 module.exports.RefreshTokenHMAC256 = {
@@ -75,8 +76,7 @@ module.exports.useAuthentication = (req, res, next) => {
     let token = ''
     if (!req.headers['authorization']) {
         if (!req.cookies['Authorization']) {
-            next();
-            return;
+            return next();
         }
         token = req.cookies['Authorization'];
     } else
@@ -92,26 +92,32 @@ module.exports.useAuthentication = (req, res, next) => {
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
             res.set('WWW-Authenticate', 'Bearer realm="MicroserviciosJWT", error="invalid_token", error_description="The access token expired"')
-            return next(generateError(`Invalid token: token expired`, 403, { expiredAt: err.expiredAt }))
+            return next(generateError(req, `Invalid token: token expired`, 403, { expiredAt: err.expiredAt }))
         }
-        return next(generateError('Invalid token', 401))
+        return next(generateError(req, 'Invalid token', 401))
     }
 }
 
 // Middleware: Autorización
+module.exports.readOnly = (req, res, next) => {
+    if (['GET', 'OPTIONS'].includes(req.method)) {
+        res.locals.isReadOnly = true
+        return next()
+    } 
+    return res.locals.isAuthenticated ? next() : next(generateErrorByStatus(res, 401))
+}
 module.exports.onlyAuthenticated = (req, res, next) => {
     if (req.method === 'OPTIONS') return next()
-    if (!res.locals.isAuthenticated) return next(generateErrorByStatus(401))
+    if (!res.locals.isAuthenticated) return next(generateErrorByStatus(res, 401))
     next()
 }
-
 module.exports.onlyInRole = (roles) => (req, res, next) => {
-    if (req.method === 'OPTIONS') return next()
-    if (!res.locals.isAuthenticated) return next(generateErrorByStatus(401))
+    if (req.method === 'OPTIONS' || res.locals.isReadOnly) return next()
+    if (!res.locals.isAuthenticated) return next(generateErrorByStatus(res, 401))
     if (roles.split(',').some(role => res.locals.isInRole(role))) {
         next()
     } else {
-        return next(generateErrorByStatus(403))
+        return next(generateErrorByStatus(res, 403))
     }
 }
 
@@ -119,64 +125,5 @@ module.exports.onlySelf = (_req, res, next) => {
     res.locals.onlySelf = true;
     next()
 }
-module.exports.readOnly = (req, res, next) => (!['GET', 'OPTIONS'].includes(req.method) && !res.locals.isAuthenticated) ? next(generateErrorByStatus(401)) : next()
-
 module.exports.isSelf = (res, id) => !res.locals.onlySelf || !id || id == res.locals.usr
 
-function sendLogin(req, res, element) {
-    let token = module.exports.generarTokenScheme(element)
-    let payload = {
-        success: true,
-        token: module.exports.generarTokenScheme(element),
-        refresh: module.exports.RefreshTokenHMAC256.generar(element),
-        name: element.nombre || element[security.PROP_NAME],
-        roles: element.roles,
-        expires_in: security.EXPIRACION_MIN * 60
-    }
-    if (req.query.cookie)
-        res.cookie('Authorization', token.substring(security.AUTHENTICATION_SCHEME.length), { maxAge: 3600000 })
-    // res.status(200).json(payload)
-    res.format({
-        'application/json': function () {
-             res.status(200).json(payload) 
-            },
-        'application/xml': function () { 
-            res.status(200).end(builder.buildObject(payload)) 
-        },
-        'default': function () { res.status(406).send('Not Acceptable') }
-      })
-      
-}
-
-const router = express.Router();
-router.post('/', async function (req, res, next) {
-    if (!req.body || !req.body.username || !req.body.password) {
-        // setTimeout(() => next(generateErrorByStatus(400)), 1000)
-        return next(generateErrorByStatus(400))
-    }
-    let usr = req.body.username
-    let pwd = req.body.password
-    if (!security.PASSWORD_PATTERN.test(pwd)) {
-        // setTimeout(() => next(generateErrorByStatus(400)), 1000)
-        return next(generateErrorByStatus(400))
-    }
-    let list = [
-        {
-            "idUsuario": "adm@example.com",
-            "password": "$2b$10$5i7NYY8y3qmK3bmLmU8uMOHTawhPq7ddD7F6SfOf9ZKz76V8XssM6",
-            "nombre": "Administrador",
-            "roles": [
-                "Usuarios",
-                "Administradores"
-            ],
-            "activo": true
-        },
-    ]
-    let element = list.find(item => item[security.PROP_USERNAME] == usr && item.activo)
-    if (element && await bcrypt.compare(pwd, element[security.PROP_PASSWORD])) {
-        sendLogin(req, res, element)
-    } else {
-        res.status(200).json({ success: false })
-    }
-})
-module.exports.api = router
