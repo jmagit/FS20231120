@@ -164,7 +164,7 @@ router.post('/login/refresh', async function (req, res, next) {
     let username = decoded.usr
     try {
       const usr = await dbContext.Usuarios.findByPk(username, { include: 'idRolRoles' })
-      if (usr /*&& usr.activo*/) {
+      if (usr && usr.activo) {
         sendAccessTokenDTO(req, res, { idUsuario: username, nombre: usr.nombre, roles: usr.idRolRoles.map(item => item.idRol) })
       } else {
         res.status(200).json({ success: false })
