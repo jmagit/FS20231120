@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { LoggerService } from '@my/core';
@@ -13,7 +13,8 @@ import { LoggerService } from '@my/core';
 export class AppComponent {
   title = 'AIRBUS';
 
-  constructor(out: LoggerService) {
+  constructor(@Optional() out?: LoggerService) {
+    if(!out) return
     out.error(`Es un error`)
     out.warn(`Es un warn`)
     out.info(`Es un info`)
