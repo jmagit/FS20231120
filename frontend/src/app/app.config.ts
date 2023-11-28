@@ -2,12 +2,12 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { ERROR_LEVEL, LoggerService } from '@my/core';
+import { ERROR_LEVEL/*, LoggerService*/ } from '@my/core';
 import { environment } from 'src/environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    LoggerService,
+    // LoggerService,
     { provide: ERROR_LEVEL, useValue: environment.ERROR_LEVEL },
     provideRouter(routes)
   ]

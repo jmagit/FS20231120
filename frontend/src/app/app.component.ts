@@ -2,11 +2,13 @@ import { Component, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { LoggerService } from '@my/core';
+import { DemosComponent } from './demos/demos.component';
+import { NotificationComponent, NotificationModalComponent } from './main';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, NotificationComponent, DemosComponent, NotificationModalComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
