@@ -1,25 +1,15 @@
-import { Component, Optional } from '@angular/core';
+import { Component,  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { LoggerService } from '@my/core';
 import { DemosComponent } from './demos/demos.component';
 import { NotificationComponent, NotificationModalComponent } from './main';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet, NotificationComponent, DemosComponent, NotificationModalComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    imports: [CommonModule, RouterOutlet, NotificationComponent, DemosComponent, NotificationModalComponent]
 })
 export class AppComponent {
-  title = 'AIRBUS';
-
-  constructor(@Optional() out?: LoggerService) {
-    if(!out) return
-    out.error(`Es un error`)
-    out.warn(`Es un warn`)
-    out.info(`Es un info`)
-    out.log(`Es un log`)
-  }
 }

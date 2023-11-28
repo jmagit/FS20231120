@@ -3,6 +3,7 @@ import { LoggerService } from '@my/core';
 import { NotificationType } from '.';
 
 import { NotificationService } from './notification.service';
+import { environment } from 'src/environments/environment';
 
 describe('NotificationService', () => {
   const message = 'Notificación al usuario'
@@ -31,8 +32,10 @@ describe('NotificationService', () => {
         expect(service.Listado[0].Id).toBe(1);
         expect(service.Listado[0].Message).toBe(message);
         expect(service.Listado[0].Type).toBe(NotificationType.error);
-        expect(log.error).toHaveBeenCalled();
-        expect(log.error).toHaveBeenCalledWith(`NOTIFICATION: ${message}`)
+        if (!environment.production) {
+          expect(log.error).toHaveBeenCalled();
+          expect(log.error).toHaveBeenCalledWith(`NOTIFICATION: ${message}`)
+        }
       });
 
       it('add message: warn', (done: DoneFn) => {
