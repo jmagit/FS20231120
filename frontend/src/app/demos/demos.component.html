@@ -1,4 +1,4 @@
-<h1>Hola {{Nombre}}</h1>
+<h1>Hola {{Nombre | elipsis:10 | uppercase}}</h1>
 <p>
   <input type="text" [(ngModel)]="Nombre" >
   <input type="button" value="saluda" (click)="saluda()">
@@ -23,20 +23,20 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, fugit. Debitis eni
 </p>
 <p [class.semivisible]="!visible">Ahora me ves bien</p>
 
-<p>Calcula: 2 + 2 = {{2+2}} = {{calcula(2, 2)}}</p>
+<p>Calcula: 2 + 2 = {{2+2}} = {{calcula(2, 2) |currency:'EUR':'symbol':'1.2-2'}}</p>
 
-<p>Fecha: {{fecha}}</p>
+<p>Fecha: {{fecha | date:'dd/MMMM/yyyy'}}</p>
 
 <ul>
-  <li *ngFor="let p of listado; let indice=index; let fondo=odd;"
+  <li *ngFor="let p of listado | slice:-5; let indice=index; let fondo=odd;"
     [style.background-color]="fondo ? 'LightBlue' : 'Lavender'">
-    {{p.nombre}} ({{p.id}}) [Elemento {{indice + 1}} de {{listado.length}}]
+    {{p.nombre | titlecase}} ({{p.id}}) [Elemento {{indice + 1}} de {{listado.length}}]
   </li>
 </ul>
 <ol>
 @for(p of listado; track p.id) {
   <li [style.background-color]="$odd ? 'LightBlue' : 'Lavender'">
-    {{p.nombre}} ({{p.id}}) [Elemento {{$index + 1}} de {{$count}}]
+    {{p.nombre | capitalize}} ({{p.id}}) [Elemento {{$index + 1}} de {{$count}}]
   </li>
 }
 </ol>
@@ -49,3 +49,8 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, fugit. Debitis eni
   <input type="text" value="Tabarnia" #txtProvincia >
   <button type="button" (click)="add(txtProvincia.value)">Add</button>
 </p>
+<my-sizer (sizeChange)="fontSize=$event;" />
+<p [style.font-size.px]="fontSize">
+{{ listado | json}}
+</p>
+<app-grafico-svg />

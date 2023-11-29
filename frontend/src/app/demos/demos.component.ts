@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Unsubscribable } from 'rxjs';
 import { NotificationService, NotificationType } from '../common-services';
 import { FormsModule } from '@angular/forms';
+import { CapitalizePipe, ElipsisPipe, SizerComponent } from '@my/core';
+import GraficoSvgComponent from 'src/lib/my-core/components/grafico-svg/grafico-svg.component';
 
 @Component({
   selector: 'app-demos',
   standalone: true,
-  imports: [CommonModule, FormsModule,],
+  imports: [CommonModule, FormsModule, ElipsisPipe, CapitalizePipe, SizerComponent, GraficoSvgComponent],
   templateUrl: './demos.component.html',
   styleUrl: './demos.component.css'
 })
@@ -55,7 +57,7 @@ export class DemosComponent implements OnInit, OnDestroy {
   calcula(a: number, b: number): number { return a + b }
 
   add(provincia: string) {
-    const id = this.listado[-1].id + 1
+    const id = this.listado[this.listado.length - 1].id + 1
     this.listado.push({id, nombre: provincia})
     this.idProvincia = id
   }

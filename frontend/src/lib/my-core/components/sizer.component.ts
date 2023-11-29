@@ -6,10 +6,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'my-sizer',
   standalone: true,
   template: `
-    <div>
+    <div [style.font-size.px]="size">
       <button (click)="dec()">-</button>
+      <output>FontSize: {{size}}px</output>
       <button (click)="inc()">+</button>
-      <output [style.font-size.px]="size">FontSize: {{size}}px</output>
     </div>
   `
 })
