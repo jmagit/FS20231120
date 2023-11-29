@@ -14,10 +14,10 @@ import { CalculadoraComponent } from '../calculadora/calculadora.component';
 })
 export class DashboardComponent {
   menu = [
-    { texto: 'demos', icono: '', componente: DemosComponent},
-    { texto: 'inicio', icono: '', componente: HomeComponent},
-    { texto: 'calculadora', icono: '', componente: CalculadoraComponent},
-    { texto: 'gráfico', icono: '', componente: GraficoSvgComponent},
+    { texto: 'demos', icono: 'fa-solid fa-chalkboard-user', componente: DemosComponent},
+    { texto: 'inicio', icono: 'fa-solid fa-house', componente: HomeComponent},
+    { texto: 'calculadora', icono: 'fa-solid fa-calculator', componente: CalculadoraComponent},
+    { texto: 'gráfico', icono: 'fa-solid fa-image', componente: GraficoSvgComponent},
   ]
   actual: any = this.menu[0].componente
 

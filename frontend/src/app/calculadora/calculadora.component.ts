@@ -12,7 +12,7 @@ import { NgIf, SlicePipe } from '@angular/common';
     templateUrl: './calculadora.component.html',
     styleUrls: ['./calculadora.component.css'],
     standalone: true,
-    imports: [NgIf, SlicePipe, ToComaDecimalPipe]
+    imports: [SlicePipe, ToComaDecimalPipe]
 })
 export class CalculadoraComponent implements OnInit, OnChanges {
   public readonly Math = Math;
@@ -165,7 +165,7 @@ export class CalculadoraComponent implements OnInit, OnChanges {
     else
     switch (ev.key.toLowerCase()) {
       case '.': if (this.SeparadorDecimal === '.') this.ponComa();  break;
-      case ',': if (this.SeparadorDecimal === '.') this.ponComa();  break;
+      case ',': if (this.SeparadorDecimal === ',') this.ponComa();  break;
       case 'backspace': this.borrar(); break;
       case 'c': this.inicia(); break;
     }

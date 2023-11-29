@@ -1,7 +1,7 @@
 <div class="container theme-dark">
   <div class="row">
     <div class="col">
-      <calculadora [SeparadorDecimal]="','" (updated)="ponResultado('IZQ', $event)"></calculadora>
+      <calculadora [SeparadorDecimal]="','" (updated)="ponResultado('IZQ', $event)" />
     </div>
     <table class="col table table-striped">
       <thead>
@@ -15,20 +15,20 @@
         <tr>
           <td colspan="3">Idioma: <select [(ngModel)]="idioma">
               @for (i of idiomas; track i.codigo) {
-  <option [value]="i.codigo">{{i.region}}</option>
-}
+                <option [value]="i.codigo">{{i.region}}</option>
+              }
             </select>
           </td>
         </tr>
       </tfoot>
       <tbody>
         @for (r of calculos | slice:-10; track r) {
-  <tr>
-          <td class="text-right">{{r.pos}}</td>
-          <td>{{r.origen}}</td>
-          <td class="text-right">{{r.valor | number:'1.0-8':idioma }}</td>
-        </tr>
-}
+          <tr>
+            <td class="text-right">{{r.pos}}</td>
+            <td>{{r.origen}}</td>
+            <td class="text-right">{{r.valor | number:'1.0-8':idioma }}</td>
+          </tr>
+        }
       </tbody>
     </table>
     <div class="col">
