@@ -1,9 +1,0 @@
-<nav>
-  @for(item of menu; track $index) {
-    <button type="button" (click)="selecciona($index)">{{item.texto}}</button>
-  }
-</nav>
-<app-notification />
-<main class="container-fluid">
-  <ng-container *ngComponentOutlet="actual" />
-</main>

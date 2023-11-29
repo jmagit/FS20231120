@@ -5,18 +5,22 @@ import { NotificationService, NotificationType } from '../common-services';
 import { FormsModule } from '@angular/forms';
 import { CapitalizePipe, ElipsisPipe, SizerComponent } from '@my/core';
 import GraficoSvgComponent from 'src/lib/my-core/components/grafico-svg/grafico-svg.component';
+import { CalculadoraComponent } from '../calculadora/calculadora.component';
+import { CardComponent } from '../common-component';
+import { NotificationComponent } from '../main';
 
 @Component({
   selector: 'app-demos',
   standalone: true,
-  imports: [CommonModule, FormsModule, ElipsisPipe, CapitalizePipe, SizerComponent, GraficoSvgComponent],
+  imports: [CommonModule, FormsModule, ElipsisPipe, CapitalizePipe, SizerComponent, CalculadoraComponent, CardComponent, NotificationComponent, ],
   templateUrl: './demos.component.html',
-  styleUrl: './demos.component.css'
+  styleUrl: './demos.component.css',
+  // providers: [ NotificationService, ]
 })
 export class DemosComponent implements OnInit, OnDestroy {
   private suscriptor?: Unsubscribable;
   private nombre: string = 'mundo'
-  fecha = '2023-11-28'
+  fecha = '2023-01-28'
   fontSize = 24
   listado = [
     { id: 1, nombre: 'Madrid' },
@@ -74,6 +78,23 @@ export class DemosComponent implements OnInit, OnDestroy {
     if (this.suscriptor) {
       this.suscriptor.unsubscribe();
     }
+  }
+
+  idiomas = [
+    { codigo: 'en-US', region: 'USA' },
+    { codigo: 'es', region: 'España' },
+    { codigo: 'pt', region: 'Portugal' },
+  ];
+  idioma = this.idiomas[0].codigo;
+  calculos: any[] = [];
+  valCalculadora = 666;
+
+  ponResultado(origen: string, valor: any) {
+    this.calculos.push({
+      pos: this.calculos.length + 1,
+      origen,
+      valor
+    });
   }
 
 }

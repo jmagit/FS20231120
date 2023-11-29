@@ -1,5 +1,9 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { DATE_PIPE_DEFAULT_OPTIONS, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import localeEsExtra from '@angular/common/locales/extra/es';
+registerLocaleData(localeEs, 'es', localeEsExtra);
 
 import { routes } from './app.routes';
 import { ERROR_LEVEL/*, LoggerService*/ } from '@my/core';
@@ -9,6 +13,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     // LoggerService,
     { provide: ERROR_LEVEL, useValue: environment.ERROR_LEVEL },
+    { provide: LOCALE_ID, useValue: 'es-ES' },
+    { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { dateFormat: 'dd/MMM/yy' } },
     provideRouter(routes)
   ]
 };
