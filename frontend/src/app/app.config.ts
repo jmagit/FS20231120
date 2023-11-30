@@ -9,7 +9,7 @@ import { routes } from './app.routes';
 import { ERROR_LEVEL/*, LoggerService*/ } from '@my/core';
 import { environment } from 'src/environments/environment';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
-import { AjaxWaitInterceptor } from './main';
+import { ajaxWaitInterceptor } from './main';
 import { AuthInterceptor } from './security';
 
 export const appConfig: ApplicationConfig = {
@@ -18,9 +18,9 @@ export const appConfig: ApplicationConfig = {
     { provide: ERROR_LEVEL, useValue: environment.ERROR_LEVEL },
     // { provide: LOCALE_ID, useValue: 'es-ES' },
     { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { dateFormat: 'dd/MMM/yy' } },
-    { provide: HTTP_INTERCEPTORS, useClass: AjaxWaitInterceptor, multi: true, },
+    // { provide: HTTP_INTERCEPTORS, useClass: AjaxWaitInterceptor, multi: true, },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true, },
-    provideHttpClient(withInterceptorsFromDi() /*, withInterceptors([ajaxWaitInterceptor])*/),
+    provideHttpClient(withInterceptorsFromDi() , withInterceptors([ajaxWaitInterceptor])),
 
     provideRouter(routes)
   ]

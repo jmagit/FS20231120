@@ -1,5 +1,5 @@
-import { Component, Injectable, DoCheck } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import { Component, Injectable, DoCheck, inject } from '@angular/core';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -27,6 +27,12 @@ export class AjaxWaitInterceptor implements HttpInterceptor {
         finalize(() => this.srv.Ocultar())
       );
   }
+}
+// versión standalone
+export function ajaxWaitInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  const srv: AjaxWaitService = inject(AjaxWaitService);
+  srv.Mostrar();
+  return next(req).pipe(finalize(() => srv.Ocultar()));
 }
 
 @Component({
