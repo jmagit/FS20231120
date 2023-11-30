@@ -54,3 +54,5 @@
     <input type="button" value="Volver" (click)="cancel()" >
   </div>
 </form>
+<input type="button" value="list" (click)="list()" *ngIf="auth.isInRoles('Administradores')">
+{{listado | json}}

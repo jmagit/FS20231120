@@ -71,7 +71,7 @@ export class DemosComponent implements OnInit, OnDestroy {
     // this.suscriptor = this.vm.Notificacion.subscribe(n => {
     //   if (n.Type !== NotificationType.error) { return; }
     //   window.alert(`Suscripcion: ${n.Message}`);
-    //   this.vm.remove(this.vm.Listado.length - 1);
+    //   // this.vm.remove(this.vm.Listado.length - 1);
     // });
   }
   ngOnDestroy(): void {

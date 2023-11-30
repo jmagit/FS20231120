@@ -26,12 +26,11 @@ export class NIFNIEValidator implements Validator {
   }
 }
 
-export function uppercaseValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
+export const uppercaseValidator = (control: AbstractControl): { [key: string]: any } | null => {
     if (!control.value) { return null; }
     return control.value === control.value.toUpperCase() ? null : { uppercase: 'Tiene que estar en mayúsculas' }
   }
-}
+
 @Directive({
   selector: '[uppercase][formControlName],[uppercase][formControl],[uppercase][ngModel]',
   providers: [{ provide: NG_VALIDATORS, useExisting: UppercaseValidator, multi: true }],
@@ -39,7 +38,7 @@ export function uppercaseValidator(): ValidatorFn {
 })
 export class UppercaseValidator implements Validator {
   validate(control: AbstractControl): ValidationErrors | null {
-    return uppercaseValidator()(control);
+    return uppercaseValidator(control);
   }
 }
 

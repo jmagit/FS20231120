@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const { formatError, formatLocation, ApiError } = require('../lib/utils')
 const { dbContext } = require('../models/sakila/db-context')
-// const { useAuthentication, readOnly, onlyInRole } = require('../lib/security');
+const { useAuthentication, readOnly, onlyInRole } = require('../lib/security');
 const Ajv = require("ajv")
 const addFormats = require("ajv-formats")
 
@@ -37,9 +37,9 @@ function throwsErrorIfInvalid(data) {
 
 const router = express.Router();
 
-// router.use(useAuthentication)
+router.use( useAuthentication)
 // // router.use(readOnly)
-// router.use(onlyInRole('Empleados,Administradores'))
+router.use(onlyInRole('Administradores'))
 
 /**
 * @swagger

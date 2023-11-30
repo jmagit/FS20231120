@@ -86,13 +86,12 @@ describe('NIFNIEValidator', () => {
 
 
 describe('uppercaseValidator', () => {
-  const esUppercase = uppercaseValidator()
   const control = new FormControl('input');
   describe('Uppercase OK', () => {
     ['12345678', 'CASA', null].forEach(caso => {
       it(`Uppercase: ${caso}`, () => {
         control.setValue(caso);
-        expect(esUppercase(control)).toBeNull()
+        expect(uppercaseValidator(control)).toBeNull()
       })
     })
   });
@@ -101,7 +100,7 @@ describe('uppercaseValidator', () => {
     ['Algo', '12345678z', 'casa'].forEach(caso => {
       it(`Uppercase: ${caso}`, () => {
         control.setValue(caso);
-        expect(esUppercase(control)).not.toBeNull()
+        expect(uppercaseValidator(control)).not.toBeNull()
       })
     })
   });
