@@ -1,0 +1,56 @@
+<div>
+  <input type="button" value="add" (click)="add()" >
+  <input type="button" value="edit" (click)="edit()" >
+</div>
+<form #miForm="ngForm" >
+  <div>
+    <label for="id">código: </label>
+    @if(modo === 'add') {
+    <input type="number" id="id" name="id" [(ngModel)]="elemento.id" #id="ngModel" required>
+    <output class="error" [hidden]="!id.hasError('required') || miForm.pristine">Es obligatorio</output>
+    } @else {
+      <output id="id" [textContent]="elemento.id"></output>
+    }
+  </div>
+  <div>
+    <label for="nombre">nombre: </label>
+    <input type="text" id="nombre" name="nombre" [(ngModel)]="elemento.nombre" #nombre="ngModel"
+      required maxlength="10" minlength="2">
+    <output class="error" [hidden]="!nombre.hasError('required')">Es obligatorio</output>
+    <output class="error" [hidden]="!nombre.hasError('minlength') && !nombre.hasError('maxlength')">Debe tener entre 2 y 10 letras</output>
+  </div>
+  <div>
+    <label for="apellidos">apellidos: </label>
+    <input type="text" id="apellidos" name="apellidos" [(ngModel)]="elemento.apellidos" #apellidos="ngModel"
+      maxlength="10" minlength="2" uppercase>
+    <output class="error" [hidden]="!apellidos.hasError('minlength') && !apellidos.hasError('maxlength')">Debe tener entre 2 y 10 letras</output>
+    <output class="error" [hidden]="!apellidos.hasError('uppercase')">{{apellidos.getError('uppercase')}}</output>
+  </div>
+  <div>
+    <label for="correo">correo: </label>
+    <input type="url" id="correo" name="correo" [(ngModel)]="elemento.correo" #correo="ngModel"
+      maxlength="100" minlength="2">{{correo.errors | json}}
+    <output class="error" [hidden]="correo.valid">{{correo.errors | errormsg}}</output>
+  </div>
+  <div>
+    <label for="nif">nif/nie: </label>
+    <input type="text" id="nif" name="nif" [(ngModel)]="elemento.nif" #nif="ngModel"
+     nifnie>
+    <output class="error" [hidden]="nif.valid">{{nif.errors | errormsg}}</output>
+  </div>
+  <div>
+    <label for="fnacimiento">f. nacimiento: </label>
+    <input type="date" id="fnacimiento" name="fnacimiento" [(ngModel)]="elemento.fnacimiento" #fnacimiento="ngModel">
+    <output class="error" [hidden]="fnacimiento.valid">{{fnacimiento.errors | errormsg}}</output>
+  </div>
+  <div>
+    <label for="edad">edad: </label>
+    <input type="number" id="edad" name="edad" [(ngModel)]="elemento.edad" #edad="ngModel"
+      min="16" max="67">
+    <output class="error" [hidden]="edad.valid">{{edad.errors | errormsg}}</output>
+  </div>
+  <div>
+    <input type="button" value="Enviar" (click)="send()" [disabled]="miForm.invalid">
+    <input type="button" value="Volver" (click)="cancel()" >
+  </div>
+</form>

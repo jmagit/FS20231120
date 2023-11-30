@@ -3,8 +3,10 @@
     @for(item of VM.Listado; track item.Id) {
       <div class="alert {{item.Type | i18nSelect:{
           'error':'alert-danger',
-          'warn':'alert-warning', 'info':'alert-primary',
-          'other':'alert-success' } }} alert-dismissible fade show"
+          'warn':'alert-warning',
+          'info':'alert-primary',
+          'other':'alert-success'
+          } }} alert-dismissible fade show"
           role="alert">
         {{item.Message}}
         <button type="button" class="btn-close" data-bs-dismiss="alert"
