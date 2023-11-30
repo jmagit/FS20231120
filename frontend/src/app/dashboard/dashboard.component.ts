@@ -6,6 +6,7 @@ import GraficoSvgComponent from 'src/lib/my-core/components/grafico-svg/grafico-
 import { CalculadoraComponent } from '../calculadora/calculadora.component';
 import { FormularioComponent } from '../formulario/formulario.component';
 import { LoginComponent } from '../security';
+import { ContactosComponent } from '../contactos';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,10 +17,11 @@ import { LoginComponent } from '../security';
 })
 export class DashboardComponent {
   menu = [
-    { texto: 'formulario', icono: 'fa-solid fa-rectangle-list', componente: FormularioComponent},
+    { texto: 'contactos', icono: 'fa-solid fa-address-book', componente: ContactosComponent},
     { texto: 'inicio', icono: 'fa-solid fa-house', componente: HomeComponent},
     { texto: 'demos', icono: 'fa-solid fa-chalkboard-user', componente: DemosComponent},
     { texto: 'calculadora', icono: 'fa-solid fa-calculator', componente: CalculadoraComponent},
+    { texto: 'formulario', icono: 'fa-solid fa-rectangle-list', componente: FormularioComponent},
     { texto: 'gráfico', icono: 'fa-solid fa-image', componente: GraficoSvgComponent},
   ]
   actual: any = this.menu[0].componente
