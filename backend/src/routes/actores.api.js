@@ -38,7 +38,7 @@ function throwsErrorIfInvalid(data) {
 const router = express.Router();
 
 router.use( useAuthentication)
-// // router.use(readOnly)
+router.use(readOnly)
 router.use(onlyInRole('Administradores'))
 
 /**

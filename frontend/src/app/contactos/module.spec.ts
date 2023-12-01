@@ -204,7 +204,7 @@ describe('Modulo Contactos', () => {
       tick()
       expect(service.Elemento).withContext('Verifica fase de preparación').toBeDefined()
       service.cancel()
-      expect(service.Elemento).withContext('Verify Elemento').toBeUndefined()
+      expect(service.Elemento).withContext('Verify Elemento').toEqual({})
       expect(navigation.back).toHaveBeenCalled()
     }))
 

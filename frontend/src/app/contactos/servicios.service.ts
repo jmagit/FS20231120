@@ -7,7 +7,22 @@ import { RESTDAOService, ModoCRUD } from '../base-code';
 import { NavigationService, NotificationService } from '../common-services';
 import { AuthService, AUTH_REQUIRED } from '../security';
 
-export class Contacto {
+export interface IContacto {
+  [index: string]: any;
+  id?: number
+  tratamiento?: string
+  nombre?: string
+  apellidos?: string
+  telefono?: string
+  email?: string
+  sexo?: string
+  nacimiento?: string
+  avatar?: string
+  conflictivo?: boolean
+  icono?: string
+}
+
+export class Contacto implements IContacto {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [index: string]: any;
   constructor(
@@ -27,7 +42,7 @@ export class Contacto {
 @Injectable({
   providedIn: 'root'
 })
-export class ContactosDAOService extends RESTDAOService<Contacto, number> {
+export class ContactosDAOService extends RESTDAOService<IContacto, number> {
   constructor() {
     super('contactos', { context: new HttpContext().set(AUTH_REQUIRED, true) });
   }
@@ -47,8 +62,8 @@ export class ContactosDAOService extends RESTDAOService<Contacto, number> {
 })
 export class ContactosViewModelService {
   protected modo: ModoCRUD = 'list';
-  protected listado: Array<Contacto> = [];
-  protected elemento?: Contacto;
+  protected listado: Array<IContacto> = [];
+  protected elemento: IContacto = {};
   protected idOriginal?: number;
   protected listURL = '/contactos';
 
@@ -108,13 +123,13 @@ export class ContactosViewModelService {
   }
 
   clear() {
-    this.elemento = undefined;
+    this.elemento = {};
     this.idOriginal = undefined;
     this.listado = [];
   }
 
   public cancel(): void {
-    this.elemento = undefined;
+    this.elemento = {};
     this.idOriginal = undefined;
     // this.list();
     this.load(this.page)
