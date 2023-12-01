@@ -22,13 +22,23 @@ import { ActoresViewModelService } from './servicios.service';
   ],
 })
 export class ActoresComponent implements OnInit, OnDestroy {
-  constructor(protected vm: ActoresViewModelService) { }
+  constructor(protected vm: ActoresViewModelService, private route: ActivatedRoute) { }
   public get VM(): ActoresViewModelService { return this.vm; }
-  ngOnInit(): void {
-    // this.vm.list();
-    this.vm.load()
-  }
-  ngOnDestroy(): void { this.vm.clear(); }
+  ngOnInit() {
+      const id = this.route.snapshot.params['id'];
+      if (id) {
+        if (this.route.snapshot.url.slice(-1)[0]?.path === 'edit') {
+          this.vm.edit(+id);
+        } else {
+          this.vm.view(+id);
+        }
+      } else if (this.route.snapshot.url.slice(-1)[0]?.path === 'add') {
+        this.vm.add();
+      } else {
+        this.vm.load();
+      }
+    }
+    ngOnDestroy(): void { this.vm.clear(); }
 }
 
 @Component({

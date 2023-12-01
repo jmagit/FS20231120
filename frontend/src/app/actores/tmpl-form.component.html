@@ -31,14 +31,14 @@
   </div>
   <div class="form-floating col-md-4">
     <input class="form-control" [class.is-invalid]="nombre.invalid" type="text" name="nombre" id="nombre"
-       [(ngModel)]="VM.Elemento.nombre" #nombre="ngModel" required minlength="2"
+       [(ngModel)]="VM.Elemento.firstName" #nombre="ngModel" required minlength="2"
        maxlength="50" placeholder=" ">
     <label for="nombre">Nombre:</label>
     <output class="invalid-feedback" [hidden]="nombre.valid">{{nombre.errors | errormsg}}</output>
   </div>
   <div class="form-floating col-md-4">
     <input class="form-control" [class.is-invalid]="apellidos.invalid" type="text" name="apellidos" id="apellidos"
-       [(ngModel)]="VM.Elemento.apellidos" #apellidos="ngModel" minlength="2" maxlength="50"
+       [(ngModel)]="VM.Elemento.lastName" #apellidos="ngModel" minlength="2" maxlength="50"
        placeholder=" ">
     <label for="apellidos">Apellidos:</label>
     <output class="invalid-feedback" [hidden]="apellidos.valid">{{apellidos.errors | errormsg}}</output>
@@ -93,7 +93,10 @@
   <div class="mt-2">
     <input type="button" class="btn btn-success" value="Enviar" (click)="VM.send()"
        [disabled]="miForm.invalid">
-    <input type="button" class="btn btn-info" value="Volver" (click)="VM.cancel()">
+       @if (VM.Modo==='edit') {
+       <button class="btn btn-danger" (click)="VM.delete(VM.Elemento.actorId)"><i class="far fa-trash-alt"></i> Borrar</button>
+       }
+       <input type="button" class="btn btn-info" value="Volver" (click)="VM.cancel()">
   </div>
 </form>
 } @else {
