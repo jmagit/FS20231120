@@ -9,9 +9,7 @@
   <tbody>
     @for(item of VM.Listado; track item.actorId) {
     <tr>
-      <td>
-
-              <button type="button" class="btn btn-link btn-lg px-0" (click)="VM.view(item.actorId)">
+      <td><button type="button" class="btn btn-link btn-lg px-0" (click)="VM.view(item.actorId)">
                 {{item.firstName}} {{item.lastName}}</button>
       </td>
       <td class="align-middle text-end">

@@ -1,5 +1,7 @@
-<h1>Contacto</h1><input class="btn btn-secondary" type="button" value="Edit" (click)="VM.edit(VM.Elemento.actorId)">
+<h1>Contacto</h1>
 @if(VM.Elemento) {
+<!-- <input class="btn btn-secondary" type="button" value="Edit" (click)="VM.edit(VM.Elemento.actorId)"> -->
+<button class="btn btn-success" [routerLink]="['/actores', VM.Elemento.actorId, 'edit']"><i class="fas fa-pen"></i></button>
 <div class="row">
   <p>Nombre: {{VM.Elemento.firstName}}</p>
   <p>Apellidos: {{VM.Elemento.lastName}}</p>

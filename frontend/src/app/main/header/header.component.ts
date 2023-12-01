@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { LoginComponent } from 'src/app/security';
+import { AuthService, LoginComponent } from 'src/app/security';
 
 @Component({
   selector: 'app-header',
@@ -11,5 +11,5 @@ import { LoginComponent } from 'src/app/security';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-
+  constructor(public auth: AuthService) {}
 }

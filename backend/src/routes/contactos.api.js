@@ -10,7 +10,7 @@ const router = express.Router();
 const dao = dbContext.Contactos;
 
 router.use(useAuthentication)
-router.use(readOnly)
+// router.use(readOnly)
 router.use(onlyInRole('Administradores'))
 
 const ajv = new Ajv()

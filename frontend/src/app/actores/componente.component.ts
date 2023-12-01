@@ -43,10 +43,11 @@ export class ActoresComponent implements OnInit, OnDestroy {
 
 @Component({
   selector: 'app-actores-list',
-  templateUrl: './tmpl-list.sin-rutas.component.html',
+  templateUrl: './tmpl-list.con-rutas.component.html',
+  // templateUrl: './tmpl-list.sin-rutas.component.html',
   styleUrls: ['./componente.component.css'],
   standalone: true,
-  imports: [PaginatorModule]
+  imports: [PaginatorModule, RouterLink]
 })
 export class ActoresListComponent implements OnInit, OnDestroy {
   constructor(protected vm: ActoresViewModelService) { }
@@ -84,7 +85,7 @@ export class ActoresEditComponent implements OnInit, OnDestroy {
   templateUrl: './tmpl-view.component.html',
   styleUrls: ['./componente.component.css'],
   standalone: true,
-  imports: [DatePipe]
+  imports: [DatePipe, RouterLink]
 })
 export class ActoresViewComponent implements OnInit, OnDestroy {
   constructor(protected vm: ActoresViewModelService) { }
