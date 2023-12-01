@@ -214,9 +214,10 @@ describe('Modulo Contactos', () => {
           spyOn(service, 'cancel')
           service.add()
           tick()
-          let ele = new Contacto() as any;
+          expect(service.Elemento).toBeDefined()
+          const ele = new Contacto() as any;
           for (const key in dataAddMock) {
-            service.Elemento[key] = dataAddMock[key];
+            service.Elemento![key] = dataAddMock[key];
             ele[key] = dataAddMock[key];
           }
           service.send()
@@ -231,8 +232,9 @@ describe('Modulo Contactos', () => {
           spyOn(notify, 'add')
           service.add()
           tick()
+          expect(service.Elemento).toBeDefined()
           for (const key in dataBadMock) {
-            service.Elemento[key] = dataBadMock[key];
+            service.Elemento![key] = dataBadMock[key];
           }
           service.send()
           tick()
@@ -245,8 +247,9 @@ describe('Modulo Contactos', () => {
           spyOn(service, 'cancel')
           service.edit(1)
           tick()
+          expect(service.Elemento).toBeDefined()
           for (const key in dataEditMock) {
-            service.Elemento[key] = dataEditMock[key];
+            service.Elemento![key] = dataEditMock[key];
           }
           service.send()
           tick()
@@ -260,8 +263,9 @@ describe('Modulo Contactos', () => {
           spyOn(notify, 'add')
           service.edit(1)
           tick()
+          expect(service.Elemento).toBeDefined()
           for (const key in dataBadMock) {
-            service.Elemento[key] = dataBadMock[key];
+            service.Elemento![key] = dataBadMock[key];
           }
           (dao as { [i: string]: any })['listado'].splice(0)
           service.send()
@@ -288,7 +292,7 @@ describe('Modulo Contactos', () => {
         });
 
         beforeEach(() => {
-          let vm = TestBed.inject(ContactosViewModelService)
+          const vm = TestBed.inject(ContactosViewModelService)
           vm.add()
           fixture = TestBed.createComponent(componente as Type<any>);
           component = fixture.componentInstance;

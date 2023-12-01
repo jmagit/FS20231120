@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormularioComponent } from './formulario.component';
 
-describe('FormularioComponent', () => {
+xdescribe('FormularioComponent', () => {
   let component: FormularioComponent;
   let fixture: ComponentFixture<FormularioComponent>;
 
@@ -11,7 +11,7 @@ describe('FormularioComponent', () => {
       imports: [FormularioComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(FormularioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

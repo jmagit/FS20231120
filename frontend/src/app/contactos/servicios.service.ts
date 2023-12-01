@@ -8,6 +8,8 @@ import { NavigationService, NotificationService } from '../common-services';
 import { AuthService, AUTH_REQUIRED } from '../security';
 
 export class Contacto {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [index: string]: any;
   constructor(
     public id: number = 0,
     public tratamiento?: string,
