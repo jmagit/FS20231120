@@ -3,6 +3,13 @@ import { inject } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+export interface Pageable<E> {
+  page: number,
+  pages: number,
+  rows: number,
+  list: Array<E>
+}
+
 export abstract class RESTDAOService<T, K> {
   protected baseUrl = environment.apiURL;
   protected http = inject(HttpClient)
@@ -25,6 +32,7 @@ export abstract class RESTDAOService<T, K> {
     return this.http.delete<T>(`${this.baseUrl}/${id}`, this.option);
   }
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class DAOServiceMock<T, K> extends RESTDAOService<T, number> {
   constructor(public listado: Array<T>) {
     super('')
@@ -37,6 +45,7 @@ export class DAOServiceMock<T, K> extends RESTDAOService<T, number> {
     return of(this.listado[id - 1]);
   }
   override add(item: T): Observable<T> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tipo = item as { [i: string]: any }
     if (tipo[Object.keys(tipo)[0]] < 0) return throwError(() => "404 not found")
     this.listado.push(item)
@@ -53,7 +62,8 @@ export class DAOServiceMock<T, K> extends RESTDAOService<T, number> {
     this.listado.splice(id - 1, 1)
     return of(item);
   }
-  page(page: number, rows: number = 20): Observable<{ page: number, pages: number, rows: number, list: Array<any> }> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  page(page: number, _rows: number = 20): Observable<Pageable<any>> {
     return of({ page, pages: 1, rows: this.listado.length, list: this.listado });
   }
 }

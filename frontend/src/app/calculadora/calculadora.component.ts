@@ -1,10 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { LoggerService, ToComaDecimalPipe } from '@my/core';
 import { NotificationService, NotificationType } from '../common-services';
 import { environment } from 'src/environments/environment';
-import { OnChanges } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { NgIf, SlicePipe } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -152,6 +150,7 @@ export class CalculadoraComponent implements OnInit, OnChanges {
     // }
   }
 
+  // import { fromEvent } from 'rxjs';
   // teclado = fromEvent(document, 'keydown').subscribe({next: ev => this.handleKeyDown(ev as KeyboardEvent)})
   // ngOnDestroy() {
   //   this.teclado.unsubscribe()

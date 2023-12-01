@@ -44,7 +44,7 @@ class nifnieValidatorHostComponent {
 describe('NIFNIEValidator', () => {
   let component: nifnieValidatorHostComponent;
   let fixture: ComponentFixture<nifnieValidatorHostComponent>;
-  const control = new FormControl('input');
+  // const control = new FormControl('input');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -144,7 +145,7 @@ export class ActoresViewModelService {
   page = 0;
   totalPages = 0;
   totalRows = 0;
-  rowsPerPage = 8;
+  rowsPerPage = 10;
   load(page: number = -1) {
     if (page < 0) page = this.page
     this.dao.page(page, this.rowsPerPage).subscribe({

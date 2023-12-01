@@ -20,6 +20,7 @@ export class AjaxWaitService {
 @Injectable({ providedIn: 'root' })
 export class AjaxWaitInterceptor implements HttpInterceptor {
   constructor(private srv: AjaxWaitService) { }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.srv.Mostrar();
     return next.handle(req)

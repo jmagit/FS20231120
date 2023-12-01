@@ -1,5 +1,5 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ERROR_LEVEL, LoggerService } from '@my/core';
 import { NotificationService, NotificationType } from '../common-services';
@@ -268,7 +268,7 @@ describe('CalculadoraComponent', () => {
   describe('Eventos de teclado', () => {
     it('teclado', () => {
       spyOn(console, 'log').and.stub()
-      const pantalla: HTMLElement = fixture.debugElement.query(By.css('.Pantalla')).nativeElement;
+      // const pantalla: HTMLElement = fixture.debugElement.query(By.css('.Pantalla')).nativeElement;
       const contenedor = fixture.debugElement.query(By.css('.Calculadora'));
       contenedor.triggerEventHandler('keydown', { key: '9' });
       fixture.detectChanges()

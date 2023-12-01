@@ -3,7 +3,7 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor, DatePipe, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { DatePipe, } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
 import { ErrorMessagePipe, TypeValidator } from '@my/core';
 import { ActoresViewModelService } from './servicios.service';
@@ -21,24 +21,29 @@ import { ActoresViewModelService } from './servicios.service';
     forwardRef(() => ActoresListComponent),
   ],
 })
-export class ActoresComponent implements OnInit, OnDestroy {
+export class ActoresComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() page = 0
+
   constructor(protected vm: ActoresViewModelService, private route: ActivatedRoute) { }
   public get VM(): ActoresViewModelService { return this.vm; }
   ngOnInit() {
-      const id = this.route.snapshot.params['id'];
-      if (id) {
-        if (this.route.snapshot.url.slice(-1)[0]?.path === 'edit') {
-          this.vm.edit(+id);
-        } else {
-          this.vm.view(+id);
-        }
-      } else if (this.route.snapshot.url.slice(-1)[0]?.path === 'add') {
-        this.vm.add();
+    const id = this.route.snapshot.params['id'];
+    if (id) {
+      if (this.route.snapshot.url.slice(-1)[0]?.path === 'edit') {
+        this.vm.edit(+id);
       } else {
-        this.vm.load();
+        this.vm.view(+id);
       }
+    } else if (this.route.snapshot.url.slice(-1)[0]?.path === 'add') {
+      this.vm.add();
+    } else {
+      this.vm.load();
     }
-    ngOnDestroy(): void { this.vm.clear(); }
+  }
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.vm.load(this.page)
+  }
+  ngOnDestroy(): void { this.vm.clear(); }
 }
 
 @Component({

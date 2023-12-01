@@ -77,7 +77,7 @@ export class RegisterUserComponent implements OnInit {
       roles: data.roles
     } as User);
     this.dao.add(this.model).subscribe({
-      next: rslt => {
+      next: () => {
         this.login.login(data.idUsuario, data.password.passwordValue).subscribe({
           next: datos => {
             if (datos) {

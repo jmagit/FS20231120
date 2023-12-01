@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Route, UrlSegment, Data, CanActivateFn, CanActivateChildFn, CanMatchFn } from '@angular/router';
+import { Router, Route, CanActivateFn, CanActivateChildFn, CanMatchFn } from '@angular/router';
 import { HttpClient, HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpContextToken } from '@angular/common/http';
-import { BehaviorSubject, catchError, filter, Observable, of, pipe, switchMap, take, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, Observable, of, switchMap, take, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EventBusService } from '../common-services';
 
@@ -18,23 +18,23 @@ export class AuthService {
   private refresh: string = '';
   private name = '';
   private roles: Array<string> = []
-  private storage: any;
+  private storage: Storage;
 
   constructor(private eventBus: EventBusService) {
     this.storage = sessionStorage ?? localStorage;
     if (this.storage && this.storage['AuthService']) {
-      const rslt = JSON.parse(this.storage['AuthService']);
-      this.isAuth = rslt.isAuth;
-      this.authToken = rslt.authToken;
-      this.refresh = rslt.refresh;
-      this.name = rslt.name;
-      this.roles = rslt.roles;
+      const cache = JSON.parse(this.storage['AuthService']);
+      this.isAuth = cache.isAuth;
+      this.authToken = cache.authToken;
+      this.refresh = cache.refresh;
+      this.name = cache.name;
+      this.roles = cache.roles;
     }
   }
 
   get AuthorizationHeader() { return this.authToken; }
   get RefreshToken() { return this.refresh; }
-  get isAutenticated() { return this.isAuth; }
+  get isAuthenticated() { return this.isAuth; }
   get Name() { return this.name; }
   get Roles() { return Object.assign([], this.roles); }
 
@@ -50,7 +50,7 @@ export class AuthService {
     this.eventBus.emit(LOGIN_EVENT)
   }
   isInRoles(...rolesArgs: Array<string>) {
-    if (this.isAutenticated && this.roles.length > 0 && rolesArgs.length > 0)
+    if (this.isAuthenticated && this.roles.length > 0 && rolesArgs.length > 0)
       for (const role of rolesArgs)
         if (this.roles.includes(role)) return true;
     return false;
@@ -80,12 +80,12 @@ class LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class LoginService {
   constructor(private http: HttpClient, private auth: AuthService) { }
-  get isAutenticated() { return this.auth.isAutenticated; }
+  get isAuthenticated() { return this.auth.isAuthenticated; }
   get Name() { return this.auth.Name; }
   get Roles() { return this.auth.Roles; }
 
   login(usr: string, pwd: string) {
-    if (this.auth.isAutenticated) this.auth.logout();
+    if (this.auth.isAuthenticated) this.auth.logout();
     return new Observable(observable =>
       this.http.post<LoginResponse>(environment.securityApiURL + 'login', { username: usr, password: pwd })
         .subscribe({
@@ -93,14 +93,14 @@ export class LoginService {
             if (data.success === true) {
               this.auth.login(data.token ?? '', data.refresh ?? '', data.name ?? '', data.roles ?? []);
             }
-            observable.next(this.auth.isAutenticated);
+            observable.next(this.auth.isAuthenticated);
           },
           error: err => observable.error(err)
         })
     );
   }
   refresh() {
-    if (this.auth.isAutenticated) {
+    if (this.auth.isAuthenticated) {
       return this.http.post<LoginResponse>(environment.securityApiURL + 'login/refresh', { token: this.auth.RefreshToken })
         .pipe(
           switchMap(data => {
@@ -122,6 +122,8 @@ export class LoginService {
 }
 
 // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true, },
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
@@ -129,15 +131,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private auth: AuthService, private login: LoginService) { }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!(req.context.get(AUTH_REQUIRED) || req.withCredentials) || !this.auth.isAutenticated) {
+    if (!(req.context.get(AUTH_REQUIRED) || req.withCredentials) || !this.auth.isAuthenticated) {
       return next.handle(req);
     }
     const authReq = this.addAuthorizationHeader(req)
     return next.handle(authReq).pipe(
       catchError(err => {
         if ([401, 403].includes(err.status) && err.error?.detail?.toLowerCase()?.includes('token expired')
-          && !authReq.url.includes('/refresh') && this.auth.isAutenticated) {
+          && !authReq.url.includes('/refresh') && this.auth.isAuthenticated) {
           return this.refreshToken(authReq, next);
         }
         return throwError(() => err);
@@ -148,7 +151,7 @@ export class AuthInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(false);
       return this.login.refresh().pipe(
-        switchMap(data => {
+        switchMap(() => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(true);
           return next.handle(this.addAuthorizationHeader(req))
@@ -173,27 +176,29 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 /*
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) { }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (!this.authService.isAutenticated && route?.data['redirectTo'])
+    if (!this.authService.isAuthenticated && route?.data['redirectTo'])
       this.router.navigate([route?.data['redirectTo']], { queryParams: { returnUrl: state.url } });
-    return this.authService.isAutenticated;
+    return this.authService.isAuthenticated;
   }
 }
 */
 export const AuthCanActivateFn: CanActivateFn = (_route, _state) => {
-  return inject(AuthService).isAutenticated;
+  return inject(AuthService).isAuthenticated;
 }
 
 export function AuthWithRedirectCanActivate(redirectTo: string): CanActivateFn {
   return (_route, state) => {
     const authService = inject(AuthService)
-    if (!authService.isAutenticated && redirectTo)
+    if (!authService.isAuthenticated && redirectTo)
       inject(Router).navigate([redirectTo], { queryParams: { returnUrl: state.url } });
-    return authService.isAutenticated;
+    return authService.isAuthenticated;
   }
 }
 
@@ -217,7 +222,7 @@ export function InRoleCanActivate(...rolesArgs: Array<string>): CanActivateFn {
     return rolesArgs.length ? inject(AuthService).isInRoles(...rolesArgs) : false;
   }
 }
-export const InRoleCanActivateFn: CanActivateFn = (route, state) => {
+export const InRoleCanActivateFn: CanActivateFn = (route, _state) => {
   return route.data['roles'] ? inject(AuthService).isInRoles(...route.data['roles']) : false;
 }
 export function InRoleCanActivateChild(...rolesArgs: Array<string>): CanActivateChildFn {
@@ -225,7 +230,7 @@ export function InRoleCanActivateChild(...rolesArgs: Array<string>): CanActivate
     return rolesArgs.length ? inject(AuthService).isInRoles(...rolesArgs) : false;
   }
 }
-export const InRoleCanActivateChildFn: CanActivateChildFn = (childRoute, state) => {
+export const InRoleCanActivateChildFn: CanActivateChildFn = (childRoute, _state) => {
   return childRoute.data['roles'] ? inject(AuthService).isInRoles(...childRoute.data['roles']) : false;
 }
 export function InRoleCanLoad(...rolesArgs: Array<string>): CanMatchFn {

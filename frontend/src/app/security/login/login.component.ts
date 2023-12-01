@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventBusService, NotificationService } from 'src/app/common-services';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 export class BaseComponent {
   txtUsuario = 'adm@example.com';
@@ -12,7 +13,7 @@ export class BaseComponent {
   constructor(public loginSrv: LoginService, private notify: NotificationService,
     private route: ActivatedRoute, private router: Router, protected eventBus: EventBusService) { }
   logInOut() {
-    if (this.loginSrv.isAutenticated) {
+    if (this.loginSrv.isAuthenticated) {
       this.loginSrv.logout();
       this.reloadPage()
     } else {
@@ -53,9 +54,9 @@ export class BaseComponent {
     standalone: true,
     imports: [NgIf, FormsModule]
 })
-export class LoginComponent extends BaseComponent {
-  private login$: any;
-  private logout$: any;
+export class LoginComponent extends BaseComponent implements OnDestroy {
+  private login$: Subscription;
+  private logout$: Subscription;
   visible = true
   constructor(loginSrv: LoginService, notify: NotificationService, route: ActivatedRoute,
     router: Router, eventBus: EventBusService) {
@@ -66,6 +67,10 @@ export class LoginComponent extends BaseComponent {
     this.logout$ = this.eventBus.on(LOGIN_FORM_CLOSE_EVENT, () => {
       this.visible = true
     })
+  }
+  ngOnDestroy(): void {
+    this.login$.unsubscribe()
+    this.logout$.unsubscribe()
   }
 }
 
@@ -90,6 +95,6 @@ export class LoginFormComponent extends BaseComponent implements OnInit, OnDestr
   }
 
   protected override notificaError(error: string) {
-    this.errorMessage = 'Usuario o contraseña invalida.';
+    this.errorMessage = error ?? 'Usuario o contraseña invalida.';
   }
 }

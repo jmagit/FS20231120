@@ -1,4 +1,4 @@
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LoginComponent, LoginFormComponent } from './login.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NotificationService, WindowService } from 'src/app/common-services';
@@ -56,7 +56,7 @@ describe('LoginComponent', () => {
     req.flush(res);
     httpMock.verify();
 
-    expect(component.loginSrv.isAutenticated).withContext('is autenticated').toBeTruthy();
+    expect(component.loginSrv.isAuthenticated).withContext('is autenticated').toBeTruthy();
 
   }));
   it('not autenticated', waitForAsync(() => {
@@ -75,7 +75,7 @@ describe('LoginComponent', () => {
     req.flush(res);
     httpMock.verify();
 
-    expect(component.loginSrv.isAutenticated).withContext('is autenticated').toBeFalsy();
+    expect(component.loginSrv.isAuthenticated).withContext('is autenticated').toBeFalsy();
     expect(notify.add).withContext('notify error').toHaveBeenCalled()
     expect(notify.add).withContext('error message').toHaveBeenCalledWith('Usuario o contraseña invalida.');
 
@@ -85,7 +85,7 @@ describe('LoginComponent', () => {
     auth.login('B' + 'earer 12345', '12345', 'usuario', [])
     component.logInOut()
     fixture.detectChanges();
-    expect(component.loginSrv.isAutenticated).withContext('is autenticated').toBeFalsy();
+    expect(component.loginSrv.isAuthenticated).withContext('is autenticated').toBeFalsy();
   }));
 });
 
@@ -133,7 +133,7 @@ describe('LoginFormComponent', () => {
     req.flush(res);
     httpMock.verify();
 
-    expect(component.loginSrv.isAutenticated).withContext('is autenticated').toBeTruthy();
+    expect(component.loginSrv.isAuthenticated).withContext('is autenticated').toBeTruthy();
 
   }));
   it('not autenticated', waitForAsync(() => {
@@ -150,7 +150,7 @@ describe('LoginFormComponent', () => {
     req.flush(res);
     httpMock.verify();
 
-    expect(component.loginSrv.isAutenticated).withContext('is autenticated').toBeFalsy();
+    expect(component.loginSrv.isAuthenticated).withContext('is autenticated').toBeFalsy();
     expect(component.errorMessage).withContext('error message').toBe('Usuario o contraseña invalida.');
 
   }));

@@ -1,7 +1,7 @@
 <div class="col">
   <div class="card card-container">
     <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="User icon" class="profile-img-card" />
-    @if (!loginSrv.isAutenticated) {
+    @if (!loginSrv.isAuthenticated) {
 <form class="card-text" name="form"
       (ngSubmit)="miForm.form.valid && logInOut()" #miForm="ngForm" [class.was-validated]="miForm.submitted">
       <div class="card-text">
@@ -30,7 +30,7 @@
         <button type="button" class="btn btn-info btn-block" (click)="registrar()">Registrarse</button>
       </div>
       <div class="row">
-        @if (errorMessage && miForm.submitted && !loginSrv.isAutenticated) {
+        @if (errorMessage && miForm.submitted && !loginSrv.isAuthenticated) {
 <div class="alert alert-danger" role="alert">
           Acceso denegado: {{ errorMessage }}
         </div>
@@ -39,7 +39,7 @@
     </form>
 }
 
-    @if (loginSrv.isAutenticated) {
+    @if (loginSrv.isAuthenticated) {
 <div class="alert alert-success">
       <div>
         <h2>Hola {{loginSrv.Name}}</h2>

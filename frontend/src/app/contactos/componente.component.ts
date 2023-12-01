@@ -3,10 +3,11 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor, DatePipe, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { DatePipe, } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
 import { ErrorMessagePipe, TypeValidator } from '@my/core';
 import { ContactosViewModelService } from './servicios.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-contactos',
@@ -101,7 +102,7 @@ export class ContactosListComponent implements OnChanges, OnDestroy {
   //   // this.vm.list();
   //   this.vm.load()
   // }
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(_changes: SimpleChanges): void {
     this.vm.load(this.page)
   }
   ngOnDestroy(): void { this.vm.clear(); }
@@ -128,7 +129,7 @@ export class ContactosAddComponent implements OnInit {
     imports: [FormsModule, TypeValidator, ErrorMessagePipe]
 })
 export class ContactosEditComponent implements OnInit, OnDestroy {
-  private obs$: any;
+  private obs$?: Subscription;
   constructor(protected vm: ContactosViewModelService,
     protected route: ActivatedRoute, protected router: Router) { }
   public get VM(): ContactosViewModelService { return this.vm; }
@@ -144,7 +145,7 @@ export class ContactosEditComponent implements OnInit, OnDestroy {
       });
   }
   ngOnDestroy(): void {
-    this.obs$.unsubscribe();
+    this.obs$!.unsubscribe();
   }
 }
 @Component({
@@ -158,7 +159,7 @@ export class ContactosViewComponent implements OnChanges {
   @Input() id?: string;
   constructor(protected vm: ContactosViewModelService, protected router: Router) { }
   public get VM(): ContactosViewModelService { return this.vm; }
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(_changes: SimpleChanges): void {
     if (this.id) {
       this.vm.view(+this.id);
     } else {

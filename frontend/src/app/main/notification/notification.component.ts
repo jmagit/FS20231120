@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule, I18nSelectPipe, NgFor, NgIf } from '@angular/common';
+import { I18nSelectPipe, NgFor, NgIf } from '@angular/common';
 import { NotificationService } from 'src/app/common-services';
 
 @Component({

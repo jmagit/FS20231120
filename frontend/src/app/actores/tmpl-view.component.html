@@ -1,12 +1,8 @@
-<h1>Contacto</h1>
-@if(VM.Elemento) {
+<h1>Actor <a [routerLink]="['/actores', VM.Elemento.actorId, 'edit']"><i class="fas fa-pen"></i></a></h1>
 <!-- <input class="btn btn-secondary" type="button" value="Edit" (click)="VM.edit(VM.Elemento.actorId)"> -->
-<button class="btn btn-success" [routerLink]="['/actores', VM.Elemento.actorId, 'edit']"><i class="fas fa-pen"></i></button>
+
 <div class="row">
-  <p>Nombre: {{VM.Elemento.firstName}}</p>
-  <p>Apellidos: {{VM.Elemento.lastName}}</p>
+  <p><b>Nombre:</b> {{VM.Elemento.firstName}}</p>
+  <p><b>Apellidos:</b> {{VM.Elemento.lastName}}</p>
   <p><input class="btn btn-secondary" type="button" value="Volver" (click)="VM.cancel()"></p>
 </div>
-} @else {
-  <h2>Sin datos</h2>
-}

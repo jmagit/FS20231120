@@ -33,13 +33,13 @@ describe('AuthService', () => {
     expect(service.RefreshToken).toBe('refresh')
     expect(service.Name).toBe('usuario')
     expect(service.Roles.length).toEqual(2)
-    expect(service.isAutenticated).toBeTruthy();
+    expect(service.isAuthenticated).toBeTruthy();
     expect(service.isInRoles('Administradores')).toBeTruthy();
   });
 
   it('Logout', () => {
     service.logout()
-    expect(service.isAutenticated).toBeFalsy();
+    expect(service.isAuthenticated).toBeFalsy();
   });
 
 });
@@ -77,7 +77,7 @@ describe('LoginService ', () => {
       service.login(demoUsr.username, demoUsr.password).subscribe({
         next: data => {
           expect(data).toBeTruthy();
-          expect(service.isAutenticated).toBeTruthy();
+          expect(service.isAuthenticated).toBeTruthy();
           expect(service.Name).toEqual(res.name);
           expect(service.Roles.length).toEqual(2);
         },
@@ -99,7 +99,7 @@ describe('LoginService ', () => {
       service.login(demoUsr.username, demoUsr.password).subscribe({
         next: data => {
           expect(data).withContext('service result').toBeFalsy();
-          expect(service.isAutenticated).withContext('is autenticated').toBeFalsy();
+          expect(service.isAuthenticated).withContext('is autenticated').toBeFalsy();
         },
         error: () => { fail('has executed "error" callback'); }
       });
@@ -126,9 +126,9 @@ describe('LoginService ', () => {
 
   it('logout', () => {
     auth.login('token', 'refresh', 'usuario', [])
-    expect(service.isAutenticated).toBeTruthy();
+    expect(service.isAuthenticated).toBeTruthy();
     service.logout()
-    expect(service.isAutenticated).toBeFalsy();
+    expect(service.isAuthenticated).toBeFalsy();
   });
   describe('refresh', () => {
     it('OK', inject([HttpTestingController], (httpMock: HttpTestingController) => {
@@ -145,7 +145,7 @@ describe('LoginService ', () => {
       service.refresh().subscribe({
         next: data => {
           expect(data).toBeTruthy();
-          expect(service.isAutenticated).toBeTruthy();
+          expect(service.isAuthenticated).toBeTruthy();
           expect(service.Name).toEqual(res.name);
           expect(service.Roles.length).toEqual(2);
         },
@@ -168,7 +168,7 @@ describe('LoginService ', () => {
         service.refresh().subscribe({
           next: data => {
             expect(data).withContext('service result').toEqual([false]);
-            expect(service.isAutenticated).withContext('is autenticated').toBeFalsy();
+            expect(service.isAuthenticated).withContext('is autenticated').toBeFalsy();
           },
           error: () => { fail('has executed "error" callback'); }
         });
@@ -305,7 +305,7 @@ describe('AuthInterceptor', () => {
       http.get<{ result: string }>(fakeURL, { withCredentials: true }).subscribe({
         next: () => { fail('has executed "next" callback'); },
         error: data => {
-          expect(auth.isAutenticated).withContext('is autenticated').toBeFalsy();
+          expect(auth.isAuthenticated).withContext('is autenticated').toBeFalsy();
           expect(data.status).withContext('service result').toBe(401);
         }
       });
@@ -325,7 +325,7 @@ describe('AuthInterceptor', () => {
       http.get<{ result: string }>(fakeURL, { withCredentials: true }).subscribe({
         next: () => { fail('has executed "next" callback'); },
         error: data => {
-          expect(auth.isAutenticated).withContext('is autenticated').toBeFalsy();
+          expect(auth.isAuthenticated).withContext('is autenticated').toBeFalsy();
           expect(data.status).withContext('service result').toBe(401);
         }
       });
@@ -342,7 +342,7 @@ describe('AuthInterceptor', () => {
       http.get<{ result: string }>(fakeURL, { withCredentials: true }).subscribe({
         next: () => { fail('has executed "next" callback'); },
         error: data => {
-          expect(auth.isAutenticated).withContext('is autenticated').toBeTruthy();
+          expect(auth.isAuthenticated).withContext('is autenticated').toBeTruthy();
           expect(data.status).withContext('service result').toBe(404);
         }
       });

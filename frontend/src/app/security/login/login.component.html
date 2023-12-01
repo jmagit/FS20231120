@@ -1,5 +1,5 @@
 @if (visible) {
-  @if (loginSrv.isAutenticated) {
+  @if (loginSrv.isAuthenticated) {
     <small class="my-2 my-lg-0" >
       <span class="text mr-2" id="userData">Hola {{loginSrv.Name}} </span>
       <button class="btn btn-outline-dark btn-sm" type="button" title="desconectar" aria-label="enviar logout" (click)="logInOut()"><i class="fas fa-sign-out-alt"></i></button>

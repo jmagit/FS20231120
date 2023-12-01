@@ -4,7 +4,6 @@ import { Unsubscribable } from 'rxjs';
 import { NotificationService, NotificationType } from '../common-services';
 import { FormsModule } from '@angular/forms';
 import { CapitalizePipe, ElipsisPipe, SizerComponent } from '@my/core';
-import GraficoSvgComponent from 'src/lib/my-core/components/grafico-svg/grafico-svg.component';
 import { CalculadoraComponent } from '../calculadora/calculadora.component';
 import { CardComponent } from '../common-component';
 import { NotificationComponent } from '../main';
@@ -68,11 +67,11 @@ export class DemosComponent implements OnInit, OnDestroy {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    // this.suscriptor = this.vm.Notificacion.subscribe(n => {
-    //   if (n.Type !== NotificationType.error) { return; }
-    //   window.alert(`Suscripcion: ${n.Message}`);
-    //   // this.vm.remove(this.vm.Listado.length - 1);
-    // });
+    this.suscriptor = this.vm.Notificacion.subscribe(n => {
+      if (n.Type !== NotificationType.error) { return; }
+      // window.alert(`Suscripcion: ${n.Message}`);
+      // this.vm.remove(this.vm.Listado.length - 1);
+    });
   }
   ngOnDestroy(): void {
     if (this.suscriptor) {
