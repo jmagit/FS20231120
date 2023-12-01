@@ -41,23 +41,6 @@ router.use( useAuthentication)
 router.use(readOnly)
 router.use(onlyInRole('Administradores'))
 
-/**
-* @swagger
-* tags:
-*   - name: actores
-*     description: Mantenimiento de actores
-*/
-/**
- * @swagger
- *
- * /api/actores:
- *   get:
- *     tags: [ actores ]
- *     summary: Consulta actores
- *     responses:
- *       "200":
- *         description: "OK"
- */
 const getComun = async (req, res) => { // get all
     const page = +req.query.page || 0;
     const limit = +req.query.rows || 10;

@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CONTACTOS_COMPONENTES } from './componente.component';
+import { CONTACTOS_COMPONENTES, ContactosComponent } from './componente.component';
 
 
 
 @NgModule({
   declarations: [],
-  imports: [ CONTACTOS_COMPONENTES, ]
+  imports: [ ContactosComponent, CONTACTOS_COMPONENTES, ],
+  exports: [ ContactosComponent ]
 })
 export class ContactosModule { }

@@ -7,50 +7,18 @@ import { RESTDAOService, ModoCRUD } from '../base-code';
 import { NavigationService, NotificationService } from '../common-services';
 import { AuthService, AUTH_REQUIRED } from '../security';
 
-export interface IContacto {
-  [index: string]: any;
-  id?: number
-  tratamiento?: string
-  nombre?: string
-  apellidos?: string
-  telefono?: string
-  email?: string
-  sexo?: string
-  nacimiento?: string
-  avatar?: string
-  conflictivo?: boolean
-  icono?: string
-}
-
-export class Contacto implements IContacto {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [index: string]: any;
-  constructor(
-    public id: number = 0,
-    public tratamiento?: string,
-    public nombre?: string,
-    public apellidos?: string,
-    public telefono?: string,
-    public email?: string,
-    public sexo: string = 'H',
-    public nacimiento?: string,
-    public avatar?: string,
-    public conflictivo: boolean = false,
-  ) { }
-}
-
 @Injectable({
   providedIn: 'root'
 })
-export class ContactosDAOService extends RESTDAOService<IContacto, number> {
+export class ActoresDAOService extends RESTDAOService<any, number> {
   constructor() {
-    super('contactos', { context: new HttpContext().set(AUTH_REQUIRED, true) });
+    super('actores/v1', { context: new HttpContext().set(AUTH_REQUIRED, true) });
   }
   page(page: number, rows: number = 20): Observable<{ page: number, pages: number, rows: number, list: Array<any> }> {
     return new Observable(subscriber => {
-      const url = `${this.baseUrl}?_page=${page}&_rows=${rows}&_sort=nombre,apellidos`
+      const url = `${this.baseUrl}?page=${page}&rows=${rows}&sort=firstName,lastName`
       this.http.get<any>(url, this.option).subscribe({
-        next: data => subscriber.next({ page: data.number, pages: data.totalPages, rows: data.totalElements, list: data.content }),
+        next: data => subscriber.next({ page: data.page, pages: data.totalPages, rows: data.totalRows, list: data.listado }),
         error: err => subscriber.error(err)
       })
     })
@@ -60,16 +28,16 @@ export class ContactosDAOService extends RESTDAOService<IContacto, number> {
 @Injectable({
   providedIn: 'root'
 })
-export class ContactosViewModelService {
+export class ActoresViewModelService {
   protected modo: ModoCRUD = 'list';
-  protected listado: Array<IContacto> = [];
-  protected elemento: IContacto = {};
+  protected listado: Array<any> = [];
+  protected elemento: any = {};
   protected idOriginal?: number;
-  protected listURL = '/contactos';
+  protected listURL = '/actores';
 
   constructor(protected notify: NotificationService,
     protected out: LoggerService,
-    protected dao: ContactosDAOService
+    protected dao: ActoresDAOService
     , public auth: AuthService, protected router: Router, private navigation: NavigationService
   ) { }
 
@@ -88,7 +56,7 @@ export class ContactosViewModelService {
   }
 
   public add(): void {
-    this.elemento = new Contacto();
+    this.elemento = {};
     this.modo = 'add';
   }
   public edit(key: any): void {
@@ -192,9 +160,6 @@ export class ContactosViewModelService {
   }
   pageChange(page: number = 0) {
     this.router.navigate([], { queryParams: { page } })
-  }
-  imageErrorHandler(event: Event, item: any) {
-    (event.target as HTMLImageElement).src = item.sexo === 'H' ? '/assets/user-not-found-male.png' : '/assets/user-not-found-female.png'
   }
 
 }
